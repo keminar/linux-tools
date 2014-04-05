@@ -66,7 +66,6 @@ function mkdisk
 		mkfs.ext4 /dev/$dev
 	fi
 	mount /dev/$dev /mnt
-	return $dev
 }
 
 # pacstrap && fstab
