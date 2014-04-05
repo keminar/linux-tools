@@ -32,10 +32,10 @@ EOF
 function network
 {
 	read -p "Connect internect type [wlan|wifi]: " type
-	if [ "$type" == "wlan" ];then
-	dhcpcd
+	if [ "$type" == "wifi" ];then
+		wifi-menu
 	else
-	wifi-menu
+		dhcpcd
 	fi
 }
 
@@ -57,11 +57,11 @@ function mkdisk
 	fdisk /dev/$disk
 	fdisk -l /dev/$disk
 	while :; do
-		read -p "Which device will be install system [${disk}1] " dev
+		read -p "Which device will be install system [${disk}1]: " dev
 		[[ $(lsblk -dno TYPE "/dev/$dev") = 'part' ]] && break
 	done
 
-	read -p "Do you want to format ${dev} device use mkfs.ext4 [y|n]? " ans
+	read -p "Do you want to format ${dev} device use mkfs.ext4 [y|n]: " ans
 	if [ "$ans" == "y" ]; then
 		mkfs.ext4 /dev/$dev
 	fi
@@ -72,6 +72,7 @@ function mkdisk
 # pacstrap && fstab
 function strap
 {
+	echo "start pacstrap base system"
 	pacstrap /mnt base
 	genfstab -U -p /mnt >> /mnt/etc/fstab
 }
@@ -80,9 +81,10 @@ function strap
 function chroot
 {
 	echo "Set arch-chroot"
+	dev=$(mount -l|grep ' /mnt '|awk '{print $1}')
 	printf '%s\n' "mkinitcpio -p linux; \
 	pacman -S grub; \
-	grub-install --recheck /dev/$1; \
+	grub-install --recheck /dev/$dev; \
 	grub-mkconfig -o /boot/grub/grub.cfg
 	" |arch-chroot /mnt
 }
@@ -104,7 +106,7 @@ EOF
 start
 network
 mirror
-dev=mkdisk
+mkdisk
 strap
-chroot $dev
+chroot
 success
