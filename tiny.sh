@@ -84,7 +84,7 @@ function chroot
 	dev=$(mount -l|grep ' /mnt '|awk '{print $1}')
 	printf '%s\n' "mkinitcpio -p linux; \
 	pacman -S grub; \
-	grub-install --recheck /dev/$dev; \
+	grub-install --recheck $dev; \
 	grub-mkconfig -o /boot/grub/grub.cfg
 	" |arch-chroot /mnt
 }
