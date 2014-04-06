@@ -64,7 +64,7 @@ function mkdisk
 		[[ $(lsblk -dno TYPE "/dev/$dev") = 'part' ]] && break
 	done
 	boot=`fdisk -l /dev/$disk|grep "/dev/$dev "|awk '{print $2}'`
-	if [ "$boot" = "" ];then
+	if [ "$boot" != "*" ];then
 		echo "Please make /dev/$dev as boot flag"
 		mkdisk
 	fi
