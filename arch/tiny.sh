@@ -63,8 +63,8 @@ function mkdisk
 		read -p "Which device will be install system [${disk}1]: " dev
 		[[ $(lsblk -dno TYPE "/dev/$dev") = 'part' ]] && break
 	done
-	boot=`fdisk -l /dev/$disk|grep "/dev/$dev "|awk '{print $1}'`
-	if [ "boot" = "" ];then
+	boot=`fdisk -l /dev/$disk|grep "/dev/$dev "|awk '{print $2}'`
+	if [ "$boot" = "" ];then
 		echo "Please make /dev/$dev as boot flag"
 		mkdisk
 	fi
