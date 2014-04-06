@@ -9,8 +9,8 @@
 # usage		: run ./tiny.sh
 ##############################################################
 
-# sda
-disk=''
+# disk
+DISK=''
 
 # colors
 unset OFF GREEN RED
@@ -22,7 +22,7 @@ readonly OFF GREEN RED
 # start
 function tiny_start
 {
-	printf "$RED"
+	printf "$GREEN"
 cat << EOF
 -------------------------------
            Arch linux
@@ -57,20 +57,22 @@ function tiny_setdisk
 {
 	lsblk
 	read -p "Select disk [sda|hda]: " disk
+	disk=${disk:-$DISK}
 	[[ $(lsblk -dno TYPE "/dev/$disk") = 'disk' ]] || tiny_setdisk
+	DISK=$disk
 }
 
 # fdisk
 function tiny_fdisk
 {
-	fdisk /dev/$disk
-	fdisk -l /dev/$disk
+	fdisk /dev/$DISK
+	fdisk -l /dev/$DISK
 	while :; do
-		read -p "Which partition will be install system [${disk}1]: " part
-		part=${part:-${disk}1}
+		read -p "Which partition will be install system [${DISK}1]: " part
+		part=${part:-${DISK}1}
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
-	boot=`fdisk -l /dev/$disk|grep "/dev/$part "|awk '{print $2}'`
+	boot=`fdisk -l /dev/$DISK|grep "/dev/$part "|awk '{print $2}'`
 	if [ "$boot" != "*" ];then
 		printf "$RED"
 		printf "Please make /dev/$part as boot flag"
@@ -100,7 +102,7 @@ function tiny_chroot
 	echo "Set arch-chroot"
 	printf '%s\n' "mkinitcpio -p linux; \
 	pacman -S grub; \
-	grub-install --recheck /dev/$disk; \
+	grub-install --recheck /dev/$DISK; \
 	grub-mkconfig -o /boot/grub/grub.cfg
 	" |arch-chroot /mnt
 	umount /mnt
@@ -109,7 +111,7 @@ function tiny_chroot
 # success
 function tiny_success
 {
-	printf "$RED"
+	printf "$GREEN"
 cat << EOF
 ---------------------------------------
         Installation completed!
