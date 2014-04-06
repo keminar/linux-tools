@@ -49,6 +49,17 @@ function base_network
 	base_pacman net-tools
 }
 
+# sshd
+function base_openssh
+{
+	base_print "set sshd"
+	base_pacman openssh
+	read -p "Start sshd at boot?[y|n]: " type
+	if [ "$type" != 'n' ];then
+		systemctl enable sshd.service
+	fi
+}
+
 # passwd
 function base_passwd
 {
@@ -89,26 +100,17 @@ function base_vim
 	ln -sf /usr/bin/vim /usr/bin/vi
 }
 
-# sshd
-function base_openssh
-{
-	base_print "set sshd"
-	base_pacman openssh
-	read -p "Start sshd at boot?[y|n]: " type
-	if [ "$type" != 'n' ];then
-		systemctl enable sshd.service
-	fi
-}
-
+# alias
 function base_alias
 {
 	echo  alias ll='ls -l' >> /etc/bash.bashrc
 }
 
 base_network
+base_openssh
 base_passwd
 base_lang
 base_timezone
 base_keymap
 base_vim
-base_openssh
+base_alias
