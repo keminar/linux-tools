@@ -19,7 +19,7 @@ function base_print
 	RED='\e[1;31m'
 	printf "$RED"
 	printf "$@"
-	printf "$OFF"
+	printf "$OFF\n"
 }
 
 # pacman
