@@ -13,28 +13,29 @@
 disk=''
 
 # colors
-unset ALL_OFF GREEN RED
-ALL_OFF='\e[1;0m'
+unset OFF GREEN RED
+OFF='\e[1;0m'
 GREEN='\e[1;32m'
 RED='\e[1;31m'
-readonly ALL_OFF GREEN RED
+readonly OFF GREEN RED
 
 # start
-function start
+function tiny_start
 {
 	printf "$RED"
 cat << EOF
----------------------------------------
-		  install start
----------------------------------------
+-------------------------------
+           Arch linux
+        Tiny install start
+-------------------------------
 EOF
-	printf "$ALL_OFF"
+	printf "$OFF"
 }
 
 # network config
-function network
+function tiny_network
 {
-	read -p "Connect internect type [wlan|wifi|none]: " type
+	read -p "Connect internect type [none|wlan|wifi]: " type
 	if [ "$type" = "wifi" ];then
 		wifi-menu
 	elif [ "$type" = "wlan" ];then
@@ -43,7 +44,7 @@ function network
 }
 
 # select mirror
-function mirror
+function tiny_mirror
 {
 	echo "Set 163.com mirror"
 	mirror=`grep .163.com /etc/pacman.d/mirrorlist |head -n1`
@@ -51,35 +52,42 @@ function mirror
 	pacman -Sy
 }
 
-# fdisk device
-function mkdisk
+# set disk
+function tiny_setdisk
 {
 	lsblk
-	read -p "Input disk [sda|hda]: " disk
-	[[ $(lsblk -dno TYPE "/dev/$disk") = 'disk' ]] || mkdisk
+	read -p "Select disk [sda|hda]: " disk
+	[[ $(lsblk -dno TYPE "/dev/$disk") = 'disk' ]] || tiny_setdisk
+}
+
+# fdisk
+function tiny_fdisk
+{
 	fdisk /dev/$disk
 	fdisk -l /dev/$disk
 	while :; do
-		read -p "Which device will be install system [${disk}1]: " dev
-		[[ $(lsblk -dno TYPE "/dev/$dev") = 'part' ]] && break
+		read -p "Which partition will be install system [${disk}1]: " part
+		part=${part:-${disk}1}
+		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
-	boot=`fdisk -l /dev/$disk|grep "/dev/$dev "|awk '{print $2}'`
+	boot=`fdisk -l /dev/$disk|grep "/dev/$part "|awk '{print $2}'`
 	if [ "$boot" != "*" ];then
 		printf "$RED"
-		echo "Please make /dev/$dev as boot flag"
-		printf "$ALL_OFF"
-		mkdisk
+		printf "Please make /dev/$part as boot flag"
+		printf "$OFF"
+		tiny_fdisk
+		return
 	fi
 
-	read -p "Do you want to format ${dev} device use mkfs.ext4 [y|n]: " ans
-	if [ "$ans" == "y" ]; then
-		mkfs.ext4 /dev/$dev
+	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
+	if [ "$ans" = "y" ]; then
+		mkfs.ext4 /dev/$part
 	fi
-	mount /dev/$dev /mnt
+	mount /dev/$part /mnt
 }
 
 # pacstrap && fstab
-function strap
+function tiny_strap
 {
 	echo "start pacstrap base system"
 	pacstrap /mnt base
@@ -87,7 +95,7 @@ function strap
 }
 
 # chroot && grub
-function chroot
+function tiny_chroot
 {
 	echo "Set arch-chroot"
 	printf '%s\n' "mkinitcpio -p linux; \
@@ -95,26 +103,27 @@ function chroot
 	grub-install --recheck /dev/$disk; \
 	grub-mkconfig -o /boot/grub/grub.cfg
 	" |arch-chroot /mnt
+	umount /mnt
 }
 
 # success
-function success
+function tiny_success
 {
-	umount /mnt
 	printf "$RED"
 cat << EOF
 ---------------------------------------
-		Installation completed!
-	 Reboot the computer: # reboot
+        Installation completed!
+      Reboot the computer: # reboot
 ---------------------------------------
 EOF
-	printf "$ALL_OFF"
+	printf "$OFF"
 }
 
-start
-network
-mirror
-mkdisk
-strap
-chroot
-success
+tiny_start
+tiny_network
+tiny_mirror
+tiny_setdisk
+tiny_fdisk
+tiny_strap
+tiny_chroot
+tiny_success
