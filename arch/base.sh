@@ -17,15 +17,15 @@ function base_print
 {
 	OFF='\e[1;0m'
 	RED='\e[1;31m'
-	printf $RED
-	printf $@
-	printf $OFF
+	printf "$RED"
+	printf "$@"
+	printf "$OFF"
 }
 
 # pacman
 function base_pacman
 {
-	pacman -S --noconfirm $@
+	pacman -S --noconfirm "$@"
 }
 
 # network
