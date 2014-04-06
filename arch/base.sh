@@ -12,12 +12,29 @@
 # your root password
 PASSWD=123456
 
+# color
+function base_print
+{
+	OFF='\e[1;0m'
+	RED='\e[1;31m'
+	echo $RED
+	echo $@
+	echo $OFF
+}
+
+# pacman
+function base_pacman
+{
+	pacman -S --noconfirm $@
+}
+
 # network
 function base_network
 {
+	base_print "set network"
 	read -p "Connect internect type [none|wlan|wifi]: " type
 	if [ "$type" = "wifi" ];then
-		pacman -S dialog wpa_supplicant
+		base_pacman dialog wpa_supplicant
 		wifi-menu
 		profile=`netctl list|head -n1|awk '{print $2}'`
 		if [ $profile = "" ];then
@@ -29,44 +46,37 @@ function base_network
 		dhcpcd
 		systemctl enable dhcpcd.service
 	fi
-	pacman -S net-tools
+	base_pacman net-tools
 }
 
 # passwd
 function base_passwd
 {
-	echo "set root passwd"
-	echo root:$PASSWD |chkpasswd
+	base_print "set root passwd"
+	echo root:$PASSWD |chpasswd
 }
 
 # language
 function base_lang
 {
-	echo "set language"
+	base_print "set language"
 	sed -i 's/#en_US.UTF-8/en_US.UTF-8/g' /etc/locale.gen
 	sed -i 's/#zh_CN/zh_CN/g' /etc/locale.gen
 	locale-gen
 	echo LANG=en_US.UTF-8 > /etc/locale.conf
 }
 
-# font
-function base_font
-{
-	echo "set font"
-	pacman -S  ttf-dejavu wqy-zenhei wqy-microhei
-}
-
 # timezone
 function base_timezone
 {
-	echo "set timezone"
+	base_print "set timezone"
 	ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 }
 
 # keymap
 function base_keymap
 {
-	echo "set keymap"
+	base_print "set keymap"
 	echo KEYMAP=us > /etc/vconsole.conf
 	echo FONT= >> /etc/vconsole.conf
 }
@@ -74,23 +84,25 @@ function base_keymap
 # vim
 function base_vim
 {
-	echo "set vim"
-	pacman -S vim
+	base_print "set vim"
+	base_pacman vim
 	ln -sf /usr/bin/bim /usr/bin/vi
 }
 
 # sshd
 function base_openssh
 {
-	echo "set sshd"
-	pacman -S openssh
-	systemctl enable sshd.service
+	base_print "set sshd"
+	base_pacman openssh
+	read -p "Start sshd at boot?[y|n]: " type
+	if [ "$type" != 'n' ];then
+		systemctl enable sshd.service
+	fi
 }
 
 base_network
 base_passwd
 base_lang
-base_font
 base_timezone
 base_keymap
 base_vim
