@@ -7,6 +7,7 @@ Install Arch Linux
 	Arch 最小化系统安装
 	进入Arch iso 系统
 	下载arch/tiny.sh
+	wget http://tools.linuxphp.org/arch -O tiny.sh
 	chmod +x tiny.sh
 	./tiny.sh
 	按提示操作即可
