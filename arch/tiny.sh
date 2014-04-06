@@ -65,7 +65,9 @@ function mkdisk
 	done
 	boot=`fdisk -l /dev/$disk|grep "/dev/$dev "|awk '{print $2}'`
 	if [ "$boot" != "*" ];then
+		printf "$RED"
 		echo "Please make /dev/$dev as boot flag"
+		printf "$ALL_OFF"
 		mkdisk
 	fi
 
