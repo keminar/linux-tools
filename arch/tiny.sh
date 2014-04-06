@@ -9,6 +9,9 @@
 # usage		: run ./tiny.sh
 ##############################################################
 
+# sda
+disk=''
+
 # colors
 unset ALL_OFF GREEN RED
 ALL_OFF='\e[1;0m'
@@ -60,6 +63,11 @@ function mkdisk
 		read -p "Which device will be install system [${disk}1]: " dev
 		[[ $(lsblk -dno TYPE "/dev/$dev") = 'part' ]] && break
 	done
+	boot=`fdisk -l /dev/$disk|grep "/dev/$dev "|awk '{print $1}'`
+	if [ "boot" = "" ];then
+		echo "Please make /dev/$dev as boot flag"
+		mkdisk
+	fi
 
 	read -p "Do you want to format ${dev} device use mkfs.ext4 [y|n]: " ans
 	if [ "$ans" == "y" ]; then
@@ -80,10 +88,9 @@ function strap
 function chroot
 {
 	echo "Set arch-chroot"
-	dev=$(mount -l|grep ' /mnt '|awk '{print $1}')
 	printf '%s\n' "mkinitcpio -p linux; \
 	pacman -S grub; \
-	grub-install --recheck $dev; \
+	grub-install --recheck /dev/$disk; \
 	grub-mkconfig -o /boot/grub/grub.cfg
 	" |arch-chroot /mnt
 }
