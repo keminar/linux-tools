@@ -31,10 +31,10 @@ EOF
 # network config
 function network
 {
-	read -p "Connect internect type [wlan|wifi]: " type
-	if [ "$type" == "wifi" ];then
+	read -p "Connect internect type [wlan|wifi|none]: " type
+	if [ "$type" = "wifi" ];then
 		wifi-menu
-	else
+	elif [ "$type" = "wlan" ];then
 		dhcpcd
 	fi
 }
