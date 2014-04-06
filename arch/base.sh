@@ -86,7 +86,7 @@ function base_vim
 {
 	base_print "set vim"
 	base_pacman vim
-	ln -sf /usr/bin/bim /usr/bin/vi
+	ln -sf /usr/bin/vim /usr/bin/vi
 }
 
 # sshd
@@ -98,6 +98,11 @@ function base_openssh
 	if [ "$type" != 'n' ];then
 		systemctl enable sshd.service
 	fi
+}
+
+function base_alias
+{
+	echo  alias ll='ls -l' >> /etc/bash.bashrc
 }
 
 base_network
