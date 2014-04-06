@@ -17,9 +17,9 @@ function base_print
 {
 	OFF='\e[1;0m'
 	RED='\e[1;31m'
-	echo $RED
-	echo $@
-	echo $OFF
+	printf $RED
+	printf $@
+	printf $OFF
 }
 
 # pacman
