@@ -63,6 +63,14 @@ function base_timezone
 	ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 }
 
+# keymap
+function base_keymap
+{
+	echo "set keymap"
+	echo KEYMAP=us > /etc/vconsole.conf
+	echo FONT= >> /etc/vconsole.conf
+}
+
 # vim
 function base_vim
 {
@@ -84,5 +92,6 @@ base_passwd
 base_lang
 base_font
 base_timezone
+base_keymap
 base_vim
 base_openssh
