@@ -34,10 +34,10 @@ function base_network
 	base_print "set network"
 	read -p "Connect internect type [none|wlan|wifi]: " type
 	if [ "$type" = "wifi" ];then
-		base_pacman dialog wpa_supplicant
 		wifi-menu
 		profile=`netctl list|head -n1|awk '{print $2}'`
 		if [ $profile = "" ];then
+			base_print "Network not found, retry"
 			base_network
 			return
 		fi
@@ -103,7 +103,8 @@ function base_vim
 # alias
 function base_alias
 {
-	echo  alias ll='ls -l' >> /etc/bash.bashrc
+	sed -i '/alias ll/d' /etc/bash.bashrc
+	echo  "alias ll='ls -l'" >> /etc/bash.bashrc
 }
 
 base_network
