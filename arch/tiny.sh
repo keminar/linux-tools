@@ -47,6 +47,17 @@ function tiny_network
 	fi
 }
 
+# check ping
+function base_ping
+{
+	if ping 8.8.8.8 -c 1 -W 2 2>/dev/null|grep "^64 bytes from" &> /dev/null;then
+		return 0
+	else
+		base_print "Cannot connect network, exit"
+		exit 1
+	fi
+}
+
 # select mirror
 function tiny_mirror
 {
@@ -128,6 +139,7 @@ EOF
 
 tiny_start
 tiny_network
+base_ping
 tiny_mirror
 tiny_setdisk
 tiny_fdisk

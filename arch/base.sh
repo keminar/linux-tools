@@ -49,6 +49,17 @@ function base_network
 	base_pacman net-tools
 }
 
+# check ping
+function base_ping
+{
+	if ping 8.8.8.8 -c 1 -W 2 2>/dev/null|grep "^64 bytes from" &> /dev/null;then
+		return 0
+	else
+		base_print "Cannot connect network, exit"
+		exit 1
+	fi
+}
+
 # sshd
 function base_openssh
 {
@@ -114,6 +125,7 @@ function base_hostname
 }
 
 base_network
+base_ping
 base_openssh
 base_passwd
 base_lang
