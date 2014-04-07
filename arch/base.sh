@@ -107,6 +107,12 @@ function base_alias
 	echo  "alias ll='ls -l'" >> /etc/bash.bashrc
 }
 
+# hostname
+function base_hostname
+{
+	echo 'bogon' > /etc/hostname
+}
+
 base_network
 base_openssh
 base_passwd
@@ -115,3 +121,4 @@ base_timezone
 base_keymap
 base_vim
 base_alias
+base_hostname
