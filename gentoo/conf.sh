@@ -8,6 +8,7 @@
 # license	: GPLv2
 ##############################################################
 
+#--------------------------------------
 # wifi
 WIFI_INTERFACE=''
 WIFI_ESSID=''
@@ -28,6 +29,10 @@ ROOT='sda3'
 MIRROR='http://mirrors.163.com'
 #ROOT PASSWORD
 PASSWD='123456'
+#--------------------------------------
+
+# Abort on any errors
+set -e -u
 
 # colors
 unset OFF GREEN RED
@@ -53,6 +58,19 @@ cat << EOF
            Gentoo linux
         Tiny install start
 -------------------------------
+EOF
+	printf "$OFF"
+}
+
+# success
+function conf_success
+{
+	printf "$GREEN"
+cat << EOF
+---------------------------------------
+        Installation completed!
+      Reboot the computer: # reboot
+---------------------------------------
 EOF
 	printf "$OFF"
 }

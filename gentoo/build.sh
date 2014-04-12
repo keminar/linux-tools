@@ -71,21 +71,9 @@ function build_utils
 	conf_warn "utils ok"
 }
 
-# success
-function build_success
-{
-	printf "$GREEN"
-cat << EOF
----------------------------------------
-        Installation completed!
-      Reboot the computer: # reboot
----------------------------------------
-EOF
-	printf "$OFF"
-}
 
 build_config
 build_kernel
 build_grub
 build_utils
-build_success
+conf_success
