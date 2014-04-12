@@ -4,23 +4,32 @@
 # title		: gentoo tiny installer
 # authors	: keminar
 # contact	: https://github.com/keminar/linux-tools
-# date		: 05.04.2014
+# date		: 12.04.2014
 # license	: GPLv2
-# usage		: run ./tiny.sh
 ##############################################################
 
-# colors
-unset OFF GREEN RED
-OFF='\e[1;0m'
-GREEN='\e[1;32m'
-RED='\e[1;31m'
-readonly OFF GREEN RED
+BASEDIR=$(dirname $(readlink -f $0))
+source $BASEDIR/conf.sh
 
+# check
+function tiny_check
+{
+
+	if ! mount -l |grep /mnt/gentoo >/dev/null ; then
+		tiny_warn "First run ./prepare.sh shell\n"
+		exit
+	fi
+}
+
+# mount
 function tiny_mount
 {
+
 	mount -t proc none /mnt/gentoo/proc
-	mount -o bind /dev /mnt/gentoo/dev
+	mount --rbind /dev /mnt/gentoo/dev
+    mount --rbind /sys /mnt/gentoo/sys
 	cp -L /etc/resolv.conf /mnt/gentoo/etc/
+	cp $BASEDIR/* /mnt/gentoo/
 }
 
 # select mirror
@@ -34,10 +43,10 @@ function tiny_mirror
 # chroot && grub
 function tiny_chroot
 {
-	echo "Set arch-chroot"
+	tiny_warn "Now chroot into your Gentoo environment"
 	chroot /mnt/gentoo /bin/bash
 }
-
+tiny_check
 tiny_mount
 tiny_mirror
 tiny_chroot
