@@ -11,6 +11,16 @@
 BASEDIR=$(dirname $(readlink -f $0))
 source $BASEDIR/conf.sh
 
+# check
+function build_check
+{
+
+	if [ -d /mnt/gentoo ]; then
+		conf_warn "First run ./chroot.sh shell\n"
+		exit
+	fi
+}
+
 # config
 function build_config
 {
@@ -25,8 +35,6 @@ function build_config
 	# locale
 	sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
 	locale-gen
-	# eth0
-	ln -sf /etc/init.d/net.lo /etc/init.d/net.eth0
 	# fstab
 	nano -w /etc/fstab
 	conf_warn "Config ok"
@@ -61,19 +69,17 @@ function build_grub
 }
 
 # utils
-function build_utils
+function build_network
 {
 	emerge dhcpcd
+	ln -sf /etc/init.d/net.lo /etc/init.d/net.eth0
 	rc-update add net.eth0 default
-	emerge syslog-ng vixie-cron
-	rc-update add syslog-ng default
-	rc-update add vixie-cron default
 	conf_warn "utils ok"
 }
 
-
+build_check
 build_config
 build_kernel
 build_grub
-build_utils
+build_network
 conf_success

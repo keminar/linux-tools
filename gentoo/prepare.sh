@@ -30,6 +30,7 @@ function prepare_setdisk
 	disk=${disk:-$DISK}
 	[[ $(lsblk -dno TYPE "/dev/$disk") = 'disk' ]] || prepare_setdisk
 	DISK=$disk
+	conf_warn "Select disk ok"
 }
 
 # fdisk
@@ -55,6 +56,7 @@ function prepare_fdisk_boot
 		mkfs.ext2 /dev/$part
 	fi
 	BOOT=$part
+	conf_warn "/dev/$part partition ok"
 }
 
 # fdisk
@@ -71,6 +73,7 @@ function prepare_fdisk_swap
 	mkswap /dev/$part
 	swapon /dev/$part
 	SWAP=$part
+	conf_warn "/dev/$part swap ok"
 }
 
 # fdisk
@@ -79,7 +82,7 @@ function prepare_fdisk_root
 	fdisk /dev/$DISK
 	fdisk -l /dev/$DISK
 	while :; do
-		read -p "Which partition will be / [$ROOT]: " part
+		read -p "Which partition will be main partition / [$ROOT]: " part
 		part=${part:-$ROOT}
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
@@ -89,13 +92,14 @@ function prepare_fdisk_root
 		mkfs.ext4 /dev/$part
 	fi
 	ROOT=$part
+	conf_warn "/dev/$part partition ok"
 }
 
 # mount
 function prepare_mount
 {
 	mount /dev/$ROOT /mnt/gentoo
-	mkdir /mnt/gentoo/boot
+	mkdir -p /mnt/gentoo/boot
 	mount /dev/$BOOT /mnt/gentoo/boot
 	conf_warn "Mount ok"
 }
@@ -108,6 +112,7 @@ function prepare_date
 		date $ans
 	fi
 	date
+	conf_warn "Set date ok"
 }
 
 # download
@@ -130,6 +135,7 @@ function prepare_download
 		return
 	fi
 	tar jxvfp portage*.bz2 -C usr/
+	conf_warn "Download state3, portage ok"
 }
 
 conf_start
