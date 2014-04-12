@@ -138,6 +138,13 @@ function prepare_download
 	conf_warn "Download state3, portage ok"
 }
 
+# fstab
+prepare_fstab
+{
+	nano -w /mnt/gentoo/etc/fstab
+	conf_warn "fstab ok"
+}
+
 conf_start
 prepare_network
 prepare_setdisk
@@ -147,3 +154,4 @@ prepare_fdisk_root
 prepare_mount
 prepare_date
 prepare_download
+prepare_fstab

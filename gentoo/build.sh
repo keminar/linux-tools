@@ -35,9 +35,6 @@ function build_config
 	# locale
 	sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
 	locale-gen
-	# fstab
-	nano -w /etc/fstab
-	conf_warn "Config ok"
 }
 
 # kernel
