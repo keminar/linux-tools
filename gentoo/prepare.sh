@@ -139,7 +139,7 @@ function prepare_download
 }
 
 # fstab
-prepare_fstab
+function prepare_fstab
 {
 	nano -w /mnt/gentoo/etc/fstab
 	conf_warn "fstab ok"

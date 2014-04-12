@@ -16,7 +16,7 @@ function build_check
 {
 
 	if [ -d /mnt/gentoo ]; then
-		conf_warn "First run ./chroot.sh shell\n"
+		conf_warn "First run ./chroot.sh shell"
 		exit
 	fi
 }
@@ -35,6 +35,7 @@ function build_config
 	# locale
 	sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
 	locale-gen
+	conf_warn "Config ok"
 }
 
 # kernel
@@ -42,6 +43,7 @@ function build_kernel
 {
 	emerge-webrsync
 	emerge --sync
+	conf_warn "Be careful of [*]64-bit kernel"
 	time emerge gentoo-sources
 	cd /usr/src/linux
 	make menuconfig
@@ -55,6 +57,7 @@ function build_kernel
 		cp arch/x86_64/boot/bzImage /boot/kernel-x86_64-$version-gentoo
 	fi
 	make modules_install
+	cp .config /boot/config-$version-gentoo
 	conf_warn "Kernel ok"
 }
 

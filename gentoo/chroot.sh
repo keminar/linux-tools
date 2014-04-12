@@ -16,7 +16,7 @@ function chroot_check
 {
 
 	if ! mount -l |grep /mnt/gentoo >/dev/null ; then
-		conf_warn "First run ./prepare.sh shell\n"
+		conf_warn "First run ./prepare.sh shell"
 		exit
 	fi
 }
