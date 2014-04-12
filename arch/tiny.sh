@@ -108,7 +108,7 @@ function tiny_chroot
 	pacman -S grub; \
 	grub-install --recheck /dev/$DISK; \
 	grub-mkconfig -o /boot/grub/grub.cfg; \
-	$WIFI_UTILS
+	$WIFI_UTILS; \
 	" |arch-chroot /mnt
 	umount /mnt
 }

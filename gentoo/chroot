@@ -1,0 +1,43 @@
+#!/bin/bash
+
+##############################################################
+# title		: gentoo tiny installer
+# authors	: keminar
+# contact	: https://github.com/keminar/linux-tools
+# date		: 05.04.2014
+# license	: GPLv2
+# usage		: run ./tiny.sh
+##############################################################
+
+# colors
+unset OFF GREEN RED
+OFF='\e[1;0m'
+GREEN='\e[1;32m'
+RED='\e[1;31m'
+readonly OFF GREEN RED
+
+function tiny_mount
+{
+	mount -t proc none /mnt/gentoo/proc
+	mount -o bind /dev /mnt/gentoo/dev
+	cp -L /etc/resolv.conf /mnt/gentoo/etc/
+}
+
+# select mirror
+function tiny_mirror
+{
+	echo "Set 163.com mirror"
+	echo 'GENTOO_MIRRORS="http://mirrors.163.com/gentoo/"' >> /mnt/gentoo/etc/portage/make.conf
+	echo 'SYNC="rsync://rsync.cn.gentoo.org/gentoo-portage"' >> /mnt/gentoo/etc/portage/make.conf
+}
+
+# chroot && grub
+function tiny_chroot
+{
+	echo "Set arch-chroot"
+	chroot /mnt/gentoo /bin/bash
+}
+
+tiny_mount
+tiny_mirror
+tiny_chroot

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+##############################################################
+# title		: gentoo tiny installer
+# authors	: keminar
+# contact	: https://github.com/keminar/linux-tools
+# date		: 05.04.2014
+# license	: GPLv2
+# usage		: run ./tiny.sh
+##############################################################
+
+# colors
+unset OFF GREEN RED
+OFF='\e[1;0m'
+GREEN='\e[1;32m'
+RED='\e[1;31m'
+readonly OFF GREEN RED
+
+#
+function tiny_install
+{
+	env-update
+	source /etc/profile
+	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+	echo root:123456|chpasswd
+	nano /etc/fstab
+	emerge --sync
+	emerge gentoo-sources
+	cd /usr/src/linux
+	make menuconfig
+	make -j2
+	cp arch/x86/boot/bzImage /boot/kernel-my_kernel_version-gentoo
+	make modules_install
+
+	emerge dhcpcd
+}
+
+function tiny_grub
+{
+	emerge grub
+	grub2-install /dev/sda
+	grub2-mkconfig -o /boot/grub/grub.cfg
+}
+
+tiny_intall
