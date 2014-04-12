@@ -48,11 +48,13 @@ function build_kernel
 	cpu=$(($(cat /proc/cpuinfo | grep processor | wc -l)+1))
 	time make -j$cpu
 	version=$(ls -l /usr/src/|awk '{print $9}'|grep gentoo|cut -d "-" -f 2)
-	cp arch/x86/boot/bzImage /boot/kernel-$version-gentoo
+	bit=$(getconf LONG_BIT)
+	if [ "$bit" = "32" ];then
+		cp arch/x86/boot/bzImage /boot/kernel-x86-$version-gentoo
+	else
+		cp arch/x86_64/boot/bzImage /boot/kernel-x86_64-$version-gentoo
+	fi
 	make modules_install
-
-	# emerge genkernel
-	# genkernel --install --no-ramdisk-modules initramfs
 	conf_warn "Kernel ok"
 }
 
@@ -71,7 +73,16 @@ function build_network
 	emerge dhcpcd
 	ln -sf /etc/init.d/net.lo /etc/init.d/net.eth0
 	rc-update add net.eth0 default
-	conf_warn "utils ok"
+	conf_warn "network ok"
+}
+
+# Optionally,if error remove lines below
+function build_initramfs
+{
+	emerge genkernel
+	genkernel --install --no-ramdisk-modules initramfs
+	grub2-mkconfig -o /boot/grub/grub.cfg
+	conf_warn "initramfs ok"
 }
 
 build_check
@@ -79,4 +90,5 @@ build_config
 build_kernel
 build_grub
 build_network
+build_initramfs
 conf_success

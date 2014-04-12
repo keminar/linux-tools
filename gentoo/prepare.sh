@@ -33,7 +33,7 @@ function prepare_setdisk
 	conf_warn "Select disk ok"
 }
 
-# fdisk
+# fdisk boot. if not a single partition,genkernel may be not work
 function prepare_fdisk_boot
 {
 	conf_warn "Use fdisk to create partition. Need a /boot, a swap, a main partition at least"
@@ -59,7 +59,7 @@ function prepare_fdisk_boot
 	conf_warn "/dev/$part partition ok"
 }
 
-# fdisk
+# fdisk swap
 function prepare_fdisk_swap
 {
 	fdisk /dev/$DISK
@@ -76,7 +76,7 @@ function prepare_fdisk_swap
 	conf_warn "/dev/$part swap ok"
 }
 
-# fdisk
+# fdisk /root
 function prepare_fdisk_root
 {
 	fdisk /dev/$DISK
