@@ -11,20 +11,31 @@
 BASEDIR=$(dirname $(readlink -f $0))
 source $BASEDIR/conf.sh
 
+# wifi
+function prepare_network
+{
+	if [ "$WIFI_INTERFACE" != "" ] && [ "$WIFI_ESSID" != "" ];then
+		iwconfig $WIFI_INTERFACE essid "$WIFI_ESSID" key $WIFI_PASSWD
+		ifconfig $WIFI_INTERFACE up
+		dhcpcd $WIFI_INTERFACE
+	fi
+	conf_warn "Config network ok"
+}
+
 # set disk
-function tiny_setdisk
+function prepare_setdisk
 {
 	lsblk
 	read -p "Select disk [sda]: " disk
 	disk=${disk:-$DISK}
-	[[ $(lsblk -dno TYPE "/dev/$disk") = 'disk' ]] || tiny_setdisk
+	[[ $(lsblk -dno TYPE "/dev/$disk") = 'disk' ]] || prepare_setdisk
 	DISK=$disk
 }
 
 # fdisk
-function tiny_fdisk_boot
+function prepare_fdisk_boot
 {
-	tiny_warn "Use fdisk to create partition. Need a /boot, a swap, a main partition at least"
+	conf_warn "Use fdisk to create partition. Need a /boot, a swap, a main partition at least"
 	fdisk /dev/$DISK
 	fdisk -l /dev/$DISK
 	while :; do
@@ -34,20 +45,20 @@ function tiny_fdisk_boot
 	done
 	boot=`fdisk -l /dev/$DISK|grep "/dev/$part "|awk '{print $2}'`
 	if [ "$boot" != "*" ];then
-		tiny_warn "Please make /dev/$part as boot flag"
-		tiny_fdisk_boot
+		conf_warn "Please make /dev/$part as boot flag"
+		prepare_fdisk_boot
 		return
 	fi
 
-	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
+	read -p "Do you want to format ${part} partition use mkfs.ext2 [n|y]: " ans
 	if [ "$ans" = "y" ]; then
-		mkfs.ext4 /dev/$part
+		mkfs.ext2 /dev/$part
 	fi
 	BOOT=$part
 }
 
 # fdisk
-function tiny_fdisk_swap
+function prepare_fdisk_swap
 {
 	fdisk /dev/$DISK
 	fdisk -l /dev/$DISK
@@ -63,7 +74,7 @@ function tiny_fdisk_swap
 }
 
 # fdisk
-function tiny_fdisk_root
+function prepare_fdisk_root
 {
 	fdisk /dev/$DISK
 	fdisk -l /dev/$DISK
@@ -81,39 +92,52 @@ function tiny_fdisk_root
 }
 
 # mount
-function tiny_mount
+function prepare_mount
 {
 	mount /dev/$ROOT /mnt/gentoo
 	mkdir /mnt/gentoo/boot
 	mount /dev/$BOOT /mnt/gentoo/boot
+	conf_warn "Mount ok"
+}
+
+# date
+function prepare_date
+{
+	read -p "Set the current date and time if required,(Format is MMDDhhmmYYYY): " ans
+	if [ "$ans" != "" ];then
+		date $ans
+	fi
+	date
 }
 
 # download
-function tiny_download
+function prepare_download
 {
 	cd /mnt/gentoo
 	read -p "Gentoo mirror [$MIRROR]: " url
 	url=${url:-$MIRROR}
 	links $url
 	if [ ! -f stage3*.bz2 ]; then
-		tiny_warn "stage3*.bz2 not found, retry"
-		tiny_download
+		conf_warn "stage3*.bz2 not found, retry"
+		prepare_download
 		return
 	fi
 	tar jxvfp stage3*.bz2
 
 	if [ ! -f portage*.bz2 ]; then
-		tiny_warn "portage*.bz2 not found, retry"
-		tiny_download
+		conf_warn "portage*.bz2 not found, retry"
+		prepare_download
 		return
 	fi
 	tar jxvfp portage*.bz2 -C usr/
 }
 
-tiny_start
-tiny_setdisk
-tiny_fdisk_boot
-tiny_fdisk_swap
-tiny_fdisk_root
-tiny_mount
-tiny_download
+conf_start
+prepare_network
+prepare_setdisk
+prepare_fdisk_boot
+prepare_fdisk_swap
+prepare_fdisk_root
+prepare_mount
+prepare_date
+prepare_download

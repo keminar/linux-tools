@@ -12,17 +12,17 @@ BASEDIR=$(dirname $(readlink -f $0))
 source $BASEDIR/conf.sh
 
 # check
-function tiny_check
+function chroot_check
 {
 
 	if ! mount -l |grep /mnt/gentoo >/dev/null ; then
-		tiny_warn "First run ./prepare.sh shell\n"
+		conf_warn "First run ./prepare.sh shell\n"
 		exit
 	fi
 }
 
 # mount
-function tiny_mount
+function chroot_mount
 {
 
 	mount -t proc none /mnt/gentoo/proc
@@ -30,23 +30,24 @@ function tiny_mount
     mount --rbind /sys /mnt/gentoo/sys
 	cp -L /etc/resolv.conf /mnt/gentoo/etc/
 	cp $BASEDIR/* /mnt/gentoo/
+	conf_warn "Mount proc,dev ok"
 }
 
 # select mirror
-function tiny_mirror
+function chroot_mirror
 {
-	echo "Set 163.com mirror"
 	echo 'GENTOO_MIRRORS="http://mirrors.163.com/gentoo/"' >> /mnt/gentoo/etc/portage/make.conf
 	echo 'SYNC="rsync://rsync.cn.gentoo.org/gentoo-portage"' >> /mnt/gentoo/etc/portage/make.conf
+	conf_warn "Set mirror ok"
 }
 
 # chroot && grub
-function tiny_chroot
+function chroot_chroot
 {
-	tiny_warn "Now chroot into your Gentoo environment"
+	conf_warn "Now chroot into your Gentoo environment"
 	chroot /mnt/gentoo /bin/bash
 }
-tiny_check
-tiny_mount
-tiny_mirror
-tiny_chroot
+chroot_check
+chroot_mount
+chroot_mirror
+chroot_chroot
