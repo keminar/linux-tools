@@ -44,7 +44,7 @@ function tiny_network
 	read -p "Connect internect type [none|wlan|wifi]: " type
 	if [ "$type" = "wifi" ];then
 		wifi-menu
-		WIFI_UTILS='pacman -S dialog wpa_supplicant'
+		WIFI_UTILS='pacman -S --noconfirm dialog wpa_supplicant'
 	elif [ "$type" = "wlan" ];then
 		dhcpcd
 	fi
@@ -108,9 +108,9 @@ function tiny_chroot
 {
 	echo "Set arch-chroot"
 	printf '%s\n' "mkinitcpio -p linux; \
-	pacman -S grub; \
-	grub2-install --recheck /dev/$DISK; \
-	grub2-mkconfig -o /boot/grub/grub.cfg; \
+	pacman -S --noconfirm grub; \
+	grub-install --recheck /dev/$DISK; \
+	grub-mkconfig -o /boot/grub/grub.cfg; \
 	$WIFI_UTILS; \
 	" |arch-chroot /mnt
 	umount /mnt
