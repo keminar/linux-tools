@@ -74,8 +74,6 @@ function build_grub
 function build_network
 {
 	emerge dhcpcd
-	ln -sf /etc/init.d/net.lo /etc/init.d/net.eth0
-	rc-update add net.eth0 default
 	conf_warn "network ok"
 }
 
