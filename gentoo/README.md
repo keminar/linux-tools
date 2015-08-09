@@ -89,7 +89,7 @@ emerge openssh
 
 十一、make.conf里的SYNC变量给取消了
 ---
+参考 http://tieba.baidu.com/p/3723242816
 ```bash
 cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
 ```
-参考 http://tieba.baidu.com/p/3723242816
