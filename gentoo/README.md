@@ -1,14 +1,17 @@
 一、配置wifi上网
+---
 http://blog.linuxphp.org/archives/1631/
 
 二、下载包目录
+===
 http://mirrors.163.com/gentoo/releases/x86/autobuilds/current-stage3-i686/stage3-i686-20150728.tar.bz2
 http://mirrors.163.com/gentoo/snapshots/portage-latest.tar.bz2
 
-三、查看硬件lspci命令不存在
+#三、查看硬件lspci命令不存在
 emerge pciutils
 
 四、装好系统后重新编译内核
+```shell
 #!/bin/bash
 cd /usr/src/linux
 make menuconfig
@@ -23,8 +26,8 @@ else
 fi
 make modules_install
 cp .config /boot/config-$version-gentoo
-
-五、无网络安装软件
+```
+##五、无网络安装软件
 下载的包放在 /usr/portage/distfiles 目录，然后就可以使用emerge安装了
 
 六、我的是Intel无线网卡,使用wifi上网（可以放在chroot里和安装wpa_supplicant一起做更方便）
