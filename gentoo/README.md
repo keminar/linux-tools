@@ -65,23 +65,31 @@ emerge wpa_supplicant
 
 八、引导双系统
 ---
+```
 os-prober
 grub2-mkconfig -o /boot/grub/grub.cfg
+```
 
 九、智能编译内核（不建议）
 ---
+```
 emerge genkernel
 genkernel --install all
+```
 
 十、SSH支持中文
 ---
+```
 echo 'zh_CN.UTF-8 UTF-8' >> /etc/locale.gen
 locale-gen
 export LC_ALL=zh_CN.UTF-8
 emerge openssh
 /etc/init.d/sshd start
+```
 
 十一、make.conf里的SYNC变量给取消了
 ---
+```
 cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
-http://tieba.baidu.com/p/3723242816
+```
+参考 http://tieba.baidu.com/p/3723242816
