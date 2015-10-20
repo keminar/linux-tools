@@ -1,3 +1,10 @@
+archlinux命令行系统安装步骤
+===
+		1.下载系统ISO，并启动进入livecd
+		2.wget tiny.sh并执行，按提示进行操作
+		3.重启电脑进入新系统
+		4.将base.sh通过u盘copy进来并执行，如果没有u盘可以配置网络(配置方法参考base.sh 的base_network函数)并下载bash.sh（下载可以通过curl，要用wget需要先使用pacman安装）
+
 archlinux系统GNOME安装
 ===
 ```bash
