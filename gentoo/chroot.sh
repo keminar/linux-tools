@@ -27,7 +27,7 @@ function chroot_mount
 
 	mount -t proc none /mnt/gentoo/proc
 	mount --rbind /dev /mnt/gentoo/dev
-    mount --rbind /sys /mnt/gentoo/sys
+	mount --rbind /sys /mnt/gentoo/sys
 	cp -L /etc/resolv.conf /mnt/gentoo/etc/
 	cp $BASEDIR/* /mnt/gentoo/
 	conf_warn "Mount proc,dev ok"
