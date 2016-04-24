@@ -47,6 +47,7 @@ http://mirrors.163.com/gentoo/distfiles/linux-firmware-20150206.tar.xz
 emerge linux-firmware
 
 *重启电脑，查看网卡是否存在
+*如果iwconfig命令不存在，安装wireless-tools
 
 七、重新进入chroot来安装wpa_supplicant软件包
 ---
