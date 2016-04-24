@@ -55,6 +55,7 @@ function prepare_fdisk_root
 		mkfs.ext4 /dev/$part
 	fi
 	ROOT=$part
+	SWAP=''
 	conf_warn "/dev/$part partition ok"
 }
 
