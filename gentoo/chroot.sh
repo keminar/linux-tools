@@ -14,7 +14,6 @@ source $BASEDIR/conf.sh
 # check
 function chroot_check
 {
-
 	if ! mount -l |grep /mnt/gentoo >/dev/null ; then
 		conf_warn "First run ./prepare.sh shell"
 		exit
@@ -24,7 +23,6 @@ function chroot_check
 # mount
 function chroot_mount
 {
-
 	mount -t proc none /mnt/gentoo/proc
 	mount --rbind /dev /mnt/gentoo/dev
 	mount --rbind /sys /mnt/gentoo/sys
