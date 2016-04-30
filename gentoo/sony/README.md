@@ -17,7 +17,7 @@ sony 笔记本安装说明
 	通过lspci -k 查得我的显卡为ATI卡 [AMD/ATI] Whistler [Radeon HD 6630M/6650M/6750M/7670M/7690M]
 
 	*这里先要了解一下想要装哪种驱动，fglrx（闭源驱动），radeon（开源驱动）一开始不了解，混装走了不少弯路
-	我最后是装的radeon所以下面只记录此方式  [Xorg Guide](https://wiki.gentoo.org/wiki/Xorg/Guide)
+	我最后是装的radeon所以下面只记录此方式  [Xorg](https://wiki.gentoo.org/wiki/Xorg/Guide)
 
 	1. 首先安装 emerge x11-drivers/radeon-ucode
 	2. 查看 /lib/firmware/radeon/ 目录是否有相应文件,以备下一步使用
@@ -37,12 +37,12 @@ sony 笔记本安装说明
 	5. 检查内核 Input driver support 是否正确
 	6. 修改 /etc/portage/make.conf
 ```shell
-\#鼠标，键盘，触摸板
+#鼠标，键盘，触摸板
 INPUT_DEVICES="evdev synaptics"
-\#ATI显卡驱动,如果是装fglrx驱动这里也要对应改
+#ATI显卡驱动,如果是装fglrx驱动这里也要对应改
 VIDEO_CARDS="radeon"
 ```
-	7. 最后参考 [Kernel Rebuild](https://wiki.gentoo.org/wiki/Kernel/Rebuild) 或我的文档 重新编译内核并重启
+	7. 最后参考 [Kernel](https://wiki.gentoo.org/wiki/Kernel/Rebuild) 或我的文档 重新编译内核并重启
 
 三、窗口
 ---
@@ -80,7 +80,7 @@ startx
 	安装时出现libpng高版本cmake失败 ,
 	用 emerge -av --usepkg "<libpng-1.6.0" 装上一个旧版本
 
-	2. 按[GNOME Guide](https://wiki.gentoo.org/wiki/GNOME/Guide) 进行USE 配置
+	2. 按[GNOME](https://wiki.gentoo.org/wiki/GNOME/Guide) 进行USE 配置
 	查看所有选择，我这里选择4
 	eselect profile list
 	选择desktop/gnome/systemd
@@ -120,6 +120,6 @@ startx
 五、双系统引导
 ---
 	emerge os-prober ntfs3g
-	os-prober 不能识别windows，安装ntfs3g时提示CONFIG_FUSE_FS:is not set when it should be
+	os-prober 执行时不能识别windows，检查安装ntfs3g时提示CONFIG_FUSE_FS:is not set when it should be
 	编译内核打开FUSE, 里面看相关在都可以选上
 	File systems ---> <*/M> FUSE (Filesystem in Userspace) support 
