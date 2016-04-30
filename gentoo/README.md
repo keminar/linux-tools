@@ -20,16 +20,11 @@ emerge pciutils
 cd /usr/src/linux
 make menuconfig
 cpu=$(($(cat /proc/cpuinfo | grep processor | wc -l)+1))
-time make -j$cpu
-version=$(ls -l /usr/src/|awk '{print $9}'|grep gentoo|cut -d "-" -f 2)
-bit=$(getconf LONG_BIT)
-if [ "$bit" = "32" ];then
-	cp arch/x86/boot/bzImage /boot/kernel-x86-$version-gentoo
-else
-	cp arch/x86_64/boot/bzImage /boot/kernel-x86_64-$version-gentoo
-fi
+make -j$cpu
 make modules_install
-cp .config /boot/config-$version-gentoo
+#mount /boot
+make install
+grub2-mkconfig -o /boot/grub/grub.cfg
 ```
 五、无网络安装软件
 ---
