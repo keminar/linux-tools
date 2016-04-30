@@ -14,10 +14,12 @@ sony 笔记本安装说明
 
 二、显卡驱动
 ---
+[Xorg Guide](https://wiki.gentoo.org/wiki/Xorg/Guide)
+
 	通过lspci -k 查得我的显卡为ATI卡 [AMD/ATI] Whistler [Radeon HD 6630M/6650M/6750M/7670M/7690M]
 
 	*这里先要了解一下想要装哪种驱动，fglrx（闭源驱动），radeon（开源驱动）一开始不了解，混装走了不少弯路
-	我最后是装的radeon所以下面只记录此方式  [Xorg](https://wiki.gentoo.org/wiki/Xorg/Guide)
+	我最后是装的radeon所以下面只记录此方式  
 
 	1. 首先安装 emerge x11-drivers/radeon-ucode
 	2. 查看 /lib/firmware/radeon/ 目录是否有相应文件,以备下一步使用
@@ -33,7 +35,7 @@ sony 笔记本安装说明
 	在下面的External firmware blobs to build into the kernel binary 上按回车，
 	填入radeon/R600_rlc.bin radeon/R700_rlc.bin
 	在Firmware blobs root directory中回车填入/lib/firmware
-	如果上面的bin文件填写不对可以查看开机时的dmesg的错误信息找到需要的bin文件 [参考](http://blog.csdn.net/txlxt1117/article/details/44633023)
+	如果上面的bin文件填写不对可以查看开机时的dmesg的错误信息找到需要的bin文件 参考 http://blog.csdn.net/txlxt1117/article/details/44633023
 	5. 检查内核 Input driver support 是否正确
 	6. 修改 /etc/portage/make.conf
 ```shell
@@ -42,7 +44,7 @@ INPUT_DEVICES="evdev synaptics"
 #ATI显卡驱动,如果是装fglrx驱动这里也要对应改
 VIDEO_CARDS="radeon"
 ```
-	7. 最后参考 [Kernel](https://wiki.gentoo.org/wiki/Kernel/Rebuild) 或我的文档 重新编译内核并重启
+	7. 最后参考 https://wiki.gentoo.org/wiki/Kernel/Rebuild 或我的文档 重新编译内核并重启
 
 三、窗口
 ---
@@ -66,7 +68,7 @@ startx
 ---
 	*注意：由于gdm必须使用systemd而systemd和openrc互不兼容，所以要删除
 
-	1. 按 [Systemd](https://wiki.gentoo.org/wiki/Systemd) 配置内核并编译
+	1. 按  https://wiki.gentoo.org/wiki/Systemd  配置内核并编译
 	emerge --unmerge sys-fs/udev openrc sysvinit
 	emerge systemd
 	此时一定不要重启电脑，会进不了系统
@@ -80,7 +82,7 @@ startx
 	安装时出现libpng高版本cmake失败 ,
 	用 emerge -av --usepkg "<libpng-1.6.0" 装上一个旧版本
 
-	2. 按[GNOME](https://wiki.gentoo.org/wiki/GNOME/Guide) 进行USE 配置
+	2. 按 https://wiki.gentoo.org/wiki/GNOME/Guide 进行USE 配置
 	查看所有选择，我这里选择4
 	eselect profile list
 	选择desktop/gnome/systemd
