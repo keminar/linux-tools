@@ -125,3 +125,9 @@ startx
 	os-prober 执行时不能识别windows，检查安装ntfs3g时提示CONFIG_FUSE_FS:is not set when it should be
 	编译内核打开FUSE, 里面看相关在都可以选上
 	File systems ---> <*/M> FUSE (Filesystem in Userspace) support 
+	
+六、qtwebkit vs chromium block caused by icu
+新建 /etc/portage/package.use/icublock 写入
+```shell
+dev-qt/qtwebkit gstreamer icu
+```
