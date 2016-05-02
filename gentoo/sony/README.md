@@ -78,6 +78,7 @@ startx
 	grub2-mkconfig -o /boot/grub/grub.cfg
 	这时可重启看是否正常
 
+	#启动gdm报Failed to get D-Bus connection: Operation not permitted
 	emerge systemd-sysv-utils
 	安装时出现libpng高版本cmake失败 ,先卸载libpng
 	用 emerge -av --usepkg "<libpng-1.6.0" 装上一个旧版本,然后emerge @preserved-rebuild解决
