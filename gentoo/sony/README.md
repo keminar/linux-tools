@@ -79,8 +79,8 @@ startx
 	这时可重启看是否正常
 
 	emerge systemd-sysv-utils
-	安装时出现libpng高版本cmake失败 ,
-	用 emerge -av --usepkg "<libpng-1.6.0" 装上一个旧版本
+	安装时出现libpng高版本cmake失败 ,先卸载libpng
+	用 emerge -av --usepkg "<libpng-1.6.0" 装上一个旧版本,然后emerge @preserved-rebuild解决
 
 	2. 按 https://wiki.gentoo.org/wiki/GNOME/Guide 进行USE 配置
 	查看所有选择，我这里选择4
