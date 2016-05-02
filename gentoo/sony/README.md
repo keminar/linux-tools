@@ -127,8 +127,8 @@ startx
 	File systems ---> <*/M> FUSE (Filesystem in Userspace) support 
 	
 六、qtwebkit vs chromium block caused by icu
-参考 https://wiki.gentoo.org/wiki/Qt/FAQ#qt-webkit_vs_chromium_block_because_of_icu
-新建 /etc/portage/package.use/icublock 写入
+	参考 https://wiki.gentoo.org/wiki/Qt/FAQ#qt-webkit_vs_chromium_block_because_of_icu
+	新建 /etc/portage/package.use/icublock 写入
 ```shell
 dev-qt/qtwebkit gstreamer icu
 ```
