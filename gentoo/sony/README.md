@@ -78,9 +78,10 @@ startx
 	grub2-mkconfig -o /boot/grub/grub.cfg
 	这时可重启看是否正常
 
+	#启动gdm报Failed to get D-Bus connection: Operation not permitted
 	emerge systemd-sysv-utils
-	安装时出现libpng高版本cmake失败 ,
-	用 emerge -av --usepkg "<libpng-1.6.0" 装上一个旧版本
+	安装时出现libpng高版本cmake失败 ,先卸载libpng
+	用 emerge -av --usepkg "<libpng-1.6.0" 装上一个旧版本,然后emerge @preserved-rebuild解决
 
 	2. 按 https://wiki.gentoo.org/wiki/GNOME/Guide 进行USE 配置
 	查看所有选择，我这里选择4
@@ -125,3 +126,11 @@ startx
 	os-prober 执行时不能识别windows，检查安装ntfs3g时提示CONFIG_FUSE_FS:is not set when it should be
 	编译内核打开FUSE, 里面看相关在都可以选上
 	File systems ---> <*/M> FUSE (Filesystem in Userspace) support 
+	
+六、qtwebkit vs chromium block caused by icu
+---
+	参考 https://wiki.gentoo.org/wiki/Qt/FAQ#qt-webkit_vs_chromium_block_because_of_icu
+	新建 /etc/portage/package.use/icublock 写入
+```shell
+dev-qt/qtwebkit gstreamer icu
+```
