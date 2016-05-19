@@ -112,10 +112,10 @@ systemctl enable systemd-resolved.service
 useradd -m <username>
 # plugdev
 gpasswd -a <username> plugdev
-# 切换到新用户
-su <username>
-echo "exec gnome-session" > ~/.xinitrc
-sed -i '1i\export XDG_MENU_PREFIX=gnome-' ~/.xinitrc
+# 切换到新用户,systemd方式不需要
+#su <username>
+#echo "exec gnome-session" > ~/.xinitrc
+#sed -i '1i\export XDG_MENU_PREFIX=gnome-' ~/.xinitrc
 startx
 ```
 

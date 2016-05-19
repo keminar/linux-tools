@@ -89,3 +89,5 @@ emerge openssh
 ```bash
 cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
 ```
+修改/etc/portage/repos.conf/gentoo.conf为163的源
+
