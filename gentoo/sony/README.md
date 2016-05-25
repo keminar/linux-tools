@@ -141,10 +141,11 @@ dev-qt/qtwebkit gstreamer icu
 	emerge -av fcitx
 	在.xprofile里加入如下行，并检查是否执行
 ```shell
+eval "$(dbus-launch --sh-syntax --exit-with-session)"
 export LANG=zh_CN.utf8
+export XMODIFIERS="@im=fcitx"
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
 ```
 	修改gnome配置
 	gsettings set org.gnome.settings-daemon.plugins.keyboard active false
