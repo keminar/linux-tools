@@ -137,16 +137,20 @@ dev-qt/qtwebkit gstreamer icu
 
 七、fcitx中文输入
 ---
+	添加USE再重新安装
 	echo "app-i18n/fcitx gtk gtk3 qt4" > /etc/portage/package.use/fcitx
 	emerge -av fcitx
+
 	在.xprofile里加入如下行，并检查是否执行
-```shell
-eval "$(dbus-launch --sh-syntax --exit-with-session)"
-export LANG=zh_CN.utf8
-export XMODIFIERS="@im=fcitx"
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-```
-	修改gnome配置
+	eval "$(dbus-launch --sh-syntax --exit-with-session)"
+	export LANG=zh_CN.utf8
+	export XMODIFIERS="@im=fcitx"
+	export GTK_IM_MODULE=fcitx
+	export QT_IM_MODULE=fcitx
+
+	ibus不能删除，重命名防止ibus启动,解决wiznote问题
+	mv /usr/bin/ibus-daemon /usr/bin/ibus-daemon.bak
+
+	修改gnome配置,解决gedit问题
 	gsettings set org.gnome.settings-daemon.plugins.keyboard active false
 	gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'fcitx'>}"
