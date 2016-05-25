@@ -90,7 +90,7 @@ startx
 	eselect profile set 4
 
 	修改/etc/portage/make.conf
-	USE="bindist systemd -consolekit -qt4 -kde X dbus gtk gnome"
+	USE="bindist systemd -consolekit -kde X dbus gtk gtk3 gnome"
 
 	系统更新
 	emerge -av --deep --with-bdeps=y --newuse --update @world 
@@ -134,3 +134,18 @@ startx
 ```shell
 dev-qt/qtwebkit gstreamer icu
 ```
+
+七、fcitx中文输入
+---
+	echo "app-i18n/fcitx gtk gtk3 qt4" > /etc/portage/package.use/fcitx
+	emerge -av fcitx
+	在.xprofile里加入如下行，并检查是否执行
+```shell
+export LANG=zh_CN.utf8
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+```
+	修改gnome配置
+	gsettings set org.gnome.settings-daemon.plugins.keyboard active false
+	gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'fcitx'>}"
