@@ -151,6 +151,6 @@ dev-qt/qtwebkit gstreamer icu
 	ibus不能删除，重命名防止ibus启动,解决wiznote问题
 	mv /usr/bin/ibus-daemon /usr/bin/ibus-daemon.bak
 
-	修改gnome配置,解决gedit问题
+	用登陆用户修改gnome配置,解决gedit问题
 	gsettings set org.gnome.settings-daemon.plugins.keyboard active false
 	gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'fcitx'>}"
