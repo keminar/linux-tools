@@ -156,6 +156,7 @@ dev-qt/qtwebkit gstreamer icu
 	gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'fcitx'>}"
 
 八、声音
+---
 	lspci |grep -i audio 查到是intel声卡和ATI声卡
 	编译内核，HD Audio里能选的都选上
 ```shell
