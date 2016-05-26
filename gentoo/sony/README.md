@@ -157,8 +157,8 @@ dev-qt/qtwebkit gstreamer icu
 
 八、声音
 ---
-	lspci |grep -i audio 查到是intel声卡和ATI声卡
-	编译内核，HD Audio里能选的都选上
+	1. 通过 lspci |grep -i audio 查到是intel声卡和ATI声卡
+	2. 编译内核，HD Audio里能选的都选上
 ```shell
 Device Drivers --->
     Sound --->
@@ -174,6 +174,9 @@ Device Drivers --->
                             [*] Build Silicon Labs 3054 HD-modem codec support
                             [*] Enable generic HD-audio codec parser
 ```
-	安装alsa
+	3. 修改/etc/portage/make.conf 在USE里增加alsa
+	更新系统让改变生效
+	emerge --ask --changed-use --deep @world
+	如果一开始按wiki设置USE安装过了alsa，但内核没有编译全，可尝试重新安装alsa
 	emerge -av media-libs/alsa-lib
-	从gnome的 设置->硬件->声音  把输出声音打开, 默然是关闭的
+	4. 从gnome的 设置->硬件->声音  把输出声音打开, 默然是关闭的
