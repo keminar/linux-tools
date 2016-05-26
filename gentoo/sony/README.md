@@ -154,3 +154,25 @@ dev-qt/qtwebkit gstreamer icu
 	用登陆用户修改gnome配置,解决gedit问题
 	gsettings set org.gnome.settings-daemon.plugins.keyboard active false
 	gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'fcitx'>}"
+
+八、声音
+	lspci |grep -i audio 查到是intel声卡和ATI声卡
+	编译内核，HD Audio里能选的都选上
+```shell
+Device Drivers --->
+    Sound --->
+        <*> Sound card Support
+            <*> Advanced Linux Sound Architecture --->
+                [*]   PCI sound devices  --->
+
+                      Select the driver for your audio controller, e.g.:
+                      <*>   Intel HD Audio  ---> (snd-hda-intel)
+                            Select a codec or enable all and let the generic parse choose the right one:
+                            [*] Build Realtek HD-audio codec support
+                            [*] ...
+                            [*] Build Silicon Labs 3054 HD-modem codec support
+                            [*] Enable generic HD-audio codec parser
+```
+	安装alsa
+	emerge -av media-libs/alsa-lib
+	从gnome的 设置->硬件->声音  把输出声音打开, 默然是关闭的
