@@ -1,12 +1,15 @@
 gentoo 安装说明
 ===
+先执行prepare 再执行chroot 最后build
+
 一、配置wifi上网
 ---
 http://blog.linuxphp.org/archives/1631/
 
 二、下载包目录
 ---
-[stage3](http://mirrors.163.com/gentoo/releases/x86/autobuilds/current-stage3-i686/)
+[x86 stage3](http://mirrors.163.com/gentoo/releases/x86/autobuilds/current-stage3-i686/)
+[amd64 stage3](http://mirrors.163.com/gentoo/releases/amd64/autobuilds/current-stage3-amd64/)
 [portage](http://mirrors.163.com/gentoo/snapshots/portage-latest.tar.bz2)
 
 三、查看硬件lspci命令不存在
