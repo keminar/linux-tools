@@ -66,8 +66,8 @@ function build_kernel
 function build_grub
 {
 	emerge grub
-	grub2-install /dev/$GRUB_DISK
-	grub2-mkconfig -o /boot/grub/grub.cfg
+	grub-install /dev/$GRUB_DISK
+	grub-mkconfig -o /boot/grub/grub.cfg
 	conf_warn "Grub ok"
 }
 
@@ -83,7 +83,7 @@ function build_initramfs
 {
 	emerge genkernel
 	genkernel --install --no-ramdisk-modules initramfs
-	grub2-mkconfig -o /boot/grub/grub.cfg
+	grub-mkconfig -o /boot/grub/grub.cfg
 	conf_warn "initramfs ok"
 }
 
