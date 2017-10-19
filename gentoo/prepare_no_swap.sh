@@ -36,7 +36,7 @@ function prepare_setdisk
 # if a single partition
 function prepare_fdisk_root
 {
-	fdisk /dev/$DISK
+	fdisk -t dos /dev/$DISK
 	fdisk -l /dev/$DISK
 	while :; do
 		read -p "Which partition will be main partition / [$ROOT]: " part
