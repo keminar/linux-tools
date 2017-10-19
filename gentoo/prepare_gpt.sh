@@ -36,20 +36,13 @@ function prepare_setdisk
 # if a single partition
 function prepare_fdisk_root
 {
-	fdisk -t dos /dev/$DISK
+	fdisk -t gpt /dev/$DISK
 	fdisk -l /dev/$DISK
 	while :; do
 		read -p "Which partition will be main partition / [$ROOT]: " part
 		part=${part:-$ROOT}
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
-
-	boot=`fdisk -l /dev/$DISK|grep "/dev/$part "|awk '{print $2}'`
-	if [ "$boot" != "*" ];then
-		conf_warn "Please make /dev/$part as boot flag"
-		prepare_fdisk_root
-		return
-	fi
 	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
 	if [ "$ans" = "y" ]; then
 		mkfs.ext4 /dev/$part
