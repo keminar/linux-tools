@@ -44,9 +44,9 @@ function prepare_fdisk_boot
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
 
-	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
+	read -p "Do you want to format ${part} partition use mkfs.ext2 [n|y]: " ans
 	if [ "$ans" = "y" ]; then
-		mkfs.ext4 /dev/$part
+		mkfs.ext2 /dev/$part
 	fi
 	BOOT=$part
 	conf_warn "/dev/$part partition ok"
