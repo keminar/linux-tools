@@ -33,7 +33,42 @@ function prepare_setdisk
 	conf_warn "Select disk ok"
 }
 
-# if a single partition
+# fdisk boot. if not a single partition,genkernel may be not work
+function prepare_fdisk_boot
+{
+	conf_warn "Use fdisk to create partition. Need a /boot, a swap, a main partition at least"
+	fdisk -l /dev/$DISK
+	while :; do
+		read -p "Which partition will be /boot [$BOOT]: " part
+		part=${part:-$BOOT}
+		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
+	done
+
+	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
+	if [ "$ans" = "y" ]; then
+		mkfs.ext4 /dev/$part
+	fi
+	BOOT=$part
+	conf_warn "/dev/$part partition ok"
+}
+
+# fdisk swap
+function prepare_fdisk_swap
+{
+	fdisk -l /dev/$DISK
+	while :; do
+		read -p "Which partition will be swap [$SWAP]: " part
+		part=${part:-$SWAP}
+		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
+	done
+
+	mkswap /dev/$part
+	swapon /dev/$part
+	SWAP=$part
+	conf_warn "/dev/$part swap ok"
+}
+
+# fdisk /root
 function prepare_fdisk_root
 {
 	fdisk -l /dev/$DISK
@@ -42,12 +77,12 @@ function prepare_fdisk_root
 		part=${part:-$ROOT}
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
+
 	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
 	if [ "$ans" = "y" ]; then
 		mkfs.ext4 /dev/$part
 	fi
 	ROOT=$part
-	SWAP=''
 	conf_warn "/dev/$part partition ok"
 }
 
@@ -56,6 +91,7 @@ function prepare_mount
 {
 	mount /dev/$ROOT /mnt/gentoo
 	mkdir -p /mnt/gentoo/boot
+	mount /dev/$BOOT /mnt/gentoo/boot
 	conf_warn "Mount ok"
 }
 
@@ -103,6 +139,8 @@ function prepare_fstab
 conf_start
 prepare_network
 prepare_setdisk
+prepare_fdisk_boot
+prepare_fdisk_swap
 prepare_fdisk_root
 prepare_mount
 prepare_date
