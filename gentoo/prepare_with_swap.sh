@@ -37,7 +37,7 @@ function prepare_setdisk
 function prepare_fdisk_boot
 {
 	conf_warn "Use fdisk to create partition. Need a /boot, a swap, a main partition at least"
-	fdisk /dev/$DISK
+	fdisk -t dos /dev/$DISK
 	fdisk -l /dev/$DISK
 	while :; do
 		read -p "Which partition will be /boot [$BOOT]: " part
@@ -62,7 +62,7 @@ function prepare_fdisk_boot
 # fdisk swap
 function prepare_fdisk_swap
 {
-	fdisk /dev/$DISK
+	fdisk -t dos /dev/$DISK
 	fdisk -l /dev/$DISK
 	while :; do
 		read -p "Which partition will be swap [$SWAP]: " part
@@ -79,7 +79,7 @@ function prepare_fdisk_swap
 # fdisk /root
 function prepare_fdisk_root
 {
-	fdisk /dev/$DISK
+	fdisk -t dos /dev/$DISK
 	fdisk -l /dev/$DISK
 	while :; do
 		read -p "Which partition will be main partition / [$ROOT]: " part
