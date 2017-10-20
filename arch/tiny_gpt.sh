@@ -6,8 +6,8 @@
 # contact	: https://github.com/keminar/linux-tools
 # date		: 05.04.2014
 # license	: GPLv2
-# usage		: run ./tiny.sh
-# 使用parted分区
+# usage		: run ./tiny_gpt.sh
+# 先使用parted分区，boot分区必须使用fat32格式
 ##############################################################
 
 # Abort on any errors
