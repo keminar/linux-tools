@@ -86,6 +86,14 @@ function tiny_fdisk
 		mkfs.ext4 /dev/$part
 	fi
 	mount /dev/$part /mnt
+	
+	fdisk -l /dev/$DISK
+	while :; do
+		read -p "Which partition will be boot system [${DISK}1]: " part
+		part=${part:-${DISK}1}
+		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
+	done
+	mount /dev/$part /mnt/boot
 }
 
 # pacstrap && fstab
@@ -102,8 +110,8 @@ function tiny_chroot
 	echo "Set arch-chroot"
 	printf '%s\n' "mkinitcpio -p linux; \
 	pacman -S --noconfirm grub; \
-  pacman -S --noconfirm efibootmgr; \
-  grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub; \
+	pacman -S --noconfirm efibootmgr; \	
+	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub; \
 	grub-mkconfig -o /boot/grub/grub.cfg; \
 	$WIFI_UTILS \
 	" |arch-chroot /mnt
