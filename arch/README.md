@@ -5,12 +5,12 @@ archlinux命令行系统安装步骤
 		3.重启电脑进入新系统
 		4.有u盘下载好的base.sh进入第5步，否则进入第6步
 		5.将base.sh通过u盘copy进来并执行,完成
-		6.配置网络(参考base.sh 的base_network函数)下载bash.sh（下载可以用curl，要用wget需要先用pacman安装）执行
+		6.配置网络(参考base.sh 的base_network函数)下载base.sh（下载可以用curl，要用wget需要先用pacman安装）执行
 
 archlinux系统GNOME安装
 ===
 ```bash
-pacman -S xorg-server xorg-server-utils xorg-xinit
+pacman -S xorg-server
 pacman -S gnome gnome-extra gdm
 systemctl enable gdm
 
