@@ -107,7 +107,9 @@ function tiny_fdisk
 function tiny_strap
 {
 	echo "start pacstrap base system"
-	pacstrap /mnt base
+	#archlinux krb5 signature from xxxx is unknown trust
+	#pacman -S archlinux-keyring
+	pacstrap /mnt base linux linux-firmware
 	genfstab -U -p /mnt >> /mnt/etc/fstab
 }
 
