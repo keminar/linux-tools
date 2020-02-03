@@ -93,6 +93,7 @@ function tiny_fdisk
 		part=${part:-${DISK}1}
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
+	mkdir /mnt/boot
 	mount /dev/$part /mnt/boot
 }
 
