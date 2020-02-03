@@ -93,6 +93,12 @@ function tiny_fdisk
 		part=${part:-${DISK}1}
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
+
+	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
+	if [ "$ans" = "y" ]; then
+		mkfs.ext4 /dev/$part
+	fi
+
 	mkdir /mnt/boot
 	mount /dev/$part /mnt/boot
 }
