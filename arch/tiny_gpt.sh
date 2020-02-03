@@ -117,7 +117,7 @@ function tiny_chroot
 	echo "Set arch-chroot"
 	printf '%s\n' "mkinitcpio -p linux; \
 	pacman -S --noconfirm grub; \
-	pacman -S --noconfirm efibootmgr; \	
+	pacman -S --noconfirm efibootmgr; \
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub; \
 	grub-mkconfig -o /boot/grub/grub.cfg; \
 	$WIFI_UTILS \
