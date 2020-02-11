@@ -1,0 +1,89 @@
+#!/bin/bash
+
+##############################################################
+# title		: git 简易小工具
+# authors	: liminggui
+# date		: 01.01.2020
+# license	: GPLv2
+# usage		: run ./easy_git
+##############################################################
+
+# Abort on any errors
+set -e -u
+
+# 操作
+action=${1:-'help'}
+
+# colors
+unset OFF GREEN RED
+OFF='\e[1;0m'
+GREEN='\e[1;32m'
+RED='\e[1;31m'
+readonly OFF GREEN RED
+
+function error
+{
+	printf "$RED"
+	echo $@
+	printf "$OFF"
+}
+
+# 执行命令
+function exec
+{
+	echo "$@"
+	$@
+}
+
+# 查看历史
+function log
+{
+	params=$(echo "$@"|sed s/\"/\\\"/g)
+	exec git log --graph --pretty=format:"%Cred%h%Creset%C(yellow)%d%Creset%nAuthor:%cn<%ce>%nDate:%cd%Cblue(%cr)%Creset%n%nSubject:%Cgreen%s%Creset%n" --name-status "$params"
+}
+
+# 恢复数据
+function sync
+{
+	params=$@
+	if [ "$#" == "0" ];then
+		params="."
+	fi
+	git status -s $params|awk '{print $2}'  | while read line
+	do
+		exec rm -rf $line
+	done
+	exec git rm --cached -f -r -- $params
+	exec git checkout HEAD -- $params
+}
+
+# 重构参数
+params=''
+if [ "$#" != "0" ];then
+	shift
+	for i in "$@";do
+		tmp=$(echo "$i"|sed s/\"/\\\\\"/g)
+		params=$params" \"$tmp\""
+	done
+fi
+echo "git $action $params" >> /tmp/easy_git.log
+case $action in
+	log)
+		cmd=$(echo log $params)
+		eval $cmd
+		;;
+	sync)
+		cmd=$(echo sync $params)
+		eval $cmd
+		;;
+	help)
+		echo "Usage: $0 {sync|log}"
+		echo ""
+		printf "%5s %-10s %s\n" '' log 显示提交日志
+		printf "%5s %-10s %s\n" '' sync 全同步为远程数据
+		echo ""
+		exit 1;;
+	*)
+		# git原本命令
+		git $action "$@"
+esac
