@@ -1,0 +1,21 @@
+" 长度
+:set tabstop=4
+:set softtabstop=4
+:set shiftwidth=4
+
+" 编码
+:set ff=unix
+:set fencs=ucs-bom,utf8,chinese
+:set noswapfile
+:set nobackup
+:set nowritebackup
+
+" 替换空格
+:set expandtab
+:%retab!
+:set noexpandtab
+:%retab!
+:%s/\s\+$//
+
+" 退出
+:wq

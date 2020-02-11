@@ -1,0 +1,3 @@
+#!/bin/bash
+
+vim -s "$HOME/.vim_code_format" "$@" > /dev/null 2>&1
