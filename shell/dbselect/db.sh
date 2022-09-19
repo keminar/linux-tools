@@ -8,7 +8,7 @@ if [ "$rsa" != "" ];then
     ssh-add -l 2>/dev/null|grep $rsa >/dev/null
     if [ "$?" != "0" ] ;then
         # 使用source时可调用ssh-agent保存密钥密码
-        if [ "$SCRIPT" = "/bin/bash" ]; then
+        if [ "${SCRIPT%/bin/bash}" != "${SCRIPT}" ]; then
             eval `ssh-agent -s`
             ssh-add ~/.ssh/$rsa
             return
@@ -20,7 +20,7 @@ if [ "$rsa" != "" ];then
 fi
 
 # 为避免取相对路径有岐义，source时不向下执行
-if [ "$SCRIPT" = "/bin/bash" ]; then
+if [ "${SCRIPT%/bin/bash}" != "${SCRIPT}" ]; then
     echo "Do not use source command"
     # 注意这里不能exit
     return
