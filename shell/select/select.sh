@@ -4,7 +4,7 @@ set -e
 SCRIPT=$0
 
 # 不可用source调用
-if [ "${SCRIPT%/bin/bash}" != "${SCRIPT}" ]; then
+if [ "$SCRIPT" = "bash" -o "$SCRIPT" = "-bash" -o "${SCRIPT%/bin/bash}" != "${SCRIPT}" ]; then
    echo "Do not use source command"
    # 不可用exit
    return
