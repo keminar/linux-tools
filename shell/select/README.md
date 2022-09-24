@@ -20,7 +20,7 @@ bash db.sh
 
 在配置文件中增加#rsa=开头的配置,可以配置多个
 
-如
+如~/.select/ssh.conf
 ```
 #rsa=/root/.ssh/id_rsa
 #rsa=/root/.ssh/id_rsa2
@@ -34,4 +34,6 @@ ssh2=ssh root@127.0.0.1
 ```
 
 # 删除当前代理的密钥
+```
 ./select.sh clear
+```
