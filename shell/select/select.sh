@@ -5,6 +5,7 @@ SCRIPT=$0
 ACTION=$1
 # 配置默认目录
 confDir=~/.select
+confFile=$confDir/$(basename $SCRIPT .sh).conf
 agentFile=$confDir/$(basename $SCRIPT .sh).agent
 
 # 当前时间
@@ -51,7 +52,6 @@ function check_config
     if [ ! -d $confDir ];then
         mkdir $confDir
     fi
-    confFile=$confDir/$(basename $SCRIPT .sh).conf
     if [ ! -f $confFile ];then
         echo "$confFile not found"
         exit 1
