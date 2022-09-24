@@ -6,6 +6,17 @@ ACTION=$1
 # 配置默认目录
 confDir=~/.select
 
+# 当前时间
+timeNow=`date +%s`
+# 最晚休息时间
+timeEnd=`date +%s -d '21:00:00'`
+# 计算有效期
+timeExpire=$(($timeEnd - $timeNow))
+# 如果不足1小时,按1小时有效
+if [ $timeExpire -lt 3600 ];then
+   timeExpire=3600
+fi
+
 # 关闭记录的密码
 function agent_close
 {
@@ -37,13 +48,13 @@ function agent_add
      agentFile=$confDir/$(basename $SCRIPT .sh).agent
      if [ ! -f $agentFile ];then
        echo "start ssh-agent"
-       ssh-agent -s >$agentFile 2>/dev/null
+       timeout $timeExpire ssh-agent -s >$agentFile 2>/dev/null
      fi
      source $agentFile >/dev/null
      # 如果不存在表示过期,要重新生成
      if [ ! -e $SSH_AUTH_SOCK ];then
        echo "start ssh-agent"
-       ssh-agent -s >$agentFile 2>/dev/null
+       timeout $timeExpire ssh-agent -s >$agentFile 2>/dev/null
        source $agentFile >/dev/null
      fi
      # 临时把错误忽略, 不然ssh-add出错时会退出
