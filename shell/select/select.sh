@@ -48,13 +48,14 @@ function agent_add
      agentFile=$confDir/$(basename $SCRIPT .sh).agent
      if [ ! -f $agentFile ];then
        echo "start ssh-agent"
-       timeout $timeExpire ssh-agent -s >$agentFile 2>/dev/null
+       ssh-agent -s >$agentFile 2>/dev/null
      fi
      source $agentFile >/dev/null
      # 如果不存在表示过期,要重新生成
-     if [ ! -e $SSH_AUTH_SOCK ];then
+     if ! ps -p $SSH_AGENT_PID > /dev/null; then
+     #if [ ! -e $SSH_AUTH_SOCK ];then
        echo "start ssh-agent"
-       timeout $timeExpire ssh-agent -s >$agentFile 2>/dev/null
+       ssh-agent -s >$agentFile 2>/dev/null
        source $agentFile >/dev/null
      fi
      # 临时把错误忽略, 不然ssh-add出错时会退出
@@ -63,7 +64,7 @@ function agent_add
      do
        ssh-add -l 2>/dev/null|grep $rsa >/dev/null
        if [ "$?" != "0" ] ;then
-         ssh-add $rsa
+         ssh-add -t $timeExpire $rsa
        fi
      done
      set -e
