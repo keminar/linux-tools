@@ -23,10 +23,12 @@ function agent_close
 {
     if [ "$ACTION" = "close" ];then
         # 关闭所有代理
-        echo "killall ssh-agent"
         if pgrep ssh-agent >/dev/null;then
+            echo "killall ssh-agent"
             killall ssh-agent
+            exit 0
         fi
+        echo "ssh-agent process not found"
         exit 0
     elif [ "$ACTION" = "clear" ];then
         # 清理当前代理密钥
