@@ -1,12 +1,29 @@
 #!/bin/bash
-set -e
+
+# 默认错误不退, 否则source执行时会退错
+set +e
 
 SCRIPT=$0
 ACTION=$1
 # 配置默认目录
 confDir=~/.select
-confFile=$confDir/$(basename $SCRIPT .sh).conf
-agentFile=$confDir/$(basename $SCRIPT .sh).agent
+confFile=""
+agentFile=""
+
+# 检查是否为source执行
+function isSource
+{
+    if [ "$SCRIPT" = "bash" -o "$SCRIPT" = "-bash" -o "${SCRIPT%/bin/bash}" != "${SCRIPT}" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+if ! isSource ;then
+    confFile=$confDir/$(basename $SCRIPT .sh).conf
+    agentFile=$confDir/$(basename $SCRIPT .sh).agent
+fi
 
 # 当前时间
 timeNow=`date +%s`
@@ -118,12 +135,12 @@ function select_cmd
    $cmd
 }
 
-# 不可用source调用
-if [ "$SCRIPT" = "bash" -o "$SCRIPT" = "-bash" -o "${SCRIPT%/bin/bash}" != "${SCRIPT}" ]; then
+# 不可用source调用提示
+if [ "$confFile" = "" ];then
     echo "Do not use source command"
-    # 把错误回滚,不然后面再操作shell出错时会退掉终端
-    set +e
 else
+    # 非source 的打开错误中断退出
+    set -e
     agent_close
     check_config
     agent_add
