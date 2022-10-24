@@ -36,8 +36,8 @@ if [ $timeExpire -lt 3600 ];then
     timeExpire=3600
 fi
 
-# 关闭记录的密码
-function agent_close
+# 根据参数执行指定动作
+function check_action
 {
     if [ "$ACTION" = "close" ];then
         # 关闭所有代理
@@ -59,6 +59,18 @@ function agent_close
             fi
         fi
         echo "ssh-agent process not found"
+        exit 0
+    elif [ "$ACTION" = "conf" ];then
+        # check_config 检查过，一定会存在
+        cat $confFile
+        exit 0
+    elif [ "$ACTION" = "agent" ];then
+        # 可能是check_config 后才生成
+        if [ -f $agentFile ];then
+            cat $agentFile
+        else
+            echo "# $agentFile not found"
+        fi
         exit 0
     fi
 }
@@ -141,8 +153,8 @@ if [ "$confFile" = "" ];then
 else
     # 非source 的打开错误中断退出
     set -e
-    agent_close
     check_config
+    check_action
     agent_add
     select_cmd
 fi
