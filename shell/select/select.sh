@@ -72,6 +72,21 @@ function check_action
             echo "# $agentFile not found"
         fi
         exit 0
+    elif [ "$ACTION" = "help" ];then
+        name=$(basename $SCRIPT)
+        echo ""
+        echo "$name 是对ssh-agent的封装, 方便跨会话共享私钥密码连接服务器"
+        echo ""
+        echo "用法:"
+        echo -e "\t$name [选项]"
+        echo ""
+        echo "选项:"
+        echo -e "\tclose\t杀掉全部ssh-agent进程"
+        echo -e "\tclear\t清除当前进程对应的由ssh-agent保存的密码"
+        echo -e "\tconf \t输出当前进程对应的配置文件内容"
+        echo -e "\tagent\t输出当前进程的ssh-agent信息,用于其它命令共享,方法为: eval \`$name agent\`"
+        echo -e "\thelp \t帮助"
+        exit 0
     fi
 }
 
