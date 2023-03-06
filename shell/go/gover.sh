@@ -1,18 +1,21 @@
 #!/bin/bash
 SCRIPT=$(basename $0)
 
-dir=${1:-'.'}
+dir=${1:-''}
 if [ "$dir" = "" ]; then
    echo "Usage: "
    echo "    $SCRIPT <DIR>"
    exit 2
 fi
+if [ $GOROOT = "" ]; then
+   GOROOT="$dir/go"
+fi
 
-if [ ! -L "$dir/go" ];then
-    echo "The $dir/go is not a symbolic link"
+if [ ! -L "$GOROOT" ];then
+    echo "The $GOROOT is not a symbolic link"
     exit 3
 fi
-link=`ls -al $dir/go|awk '{print $NF}'`
+link=`ls -al $GOROOT|awk '{print $NF}'`
 oldVer=`basename $link`
 read -p "Current version $oldVer, do you need to change [y|n]?" answer
 if [ "$answer" = 'n' ];then
@@ -43,8 +46,8 @@ if [ "$oldVer" = "$ver" ];then
 fi
 
 fullVer=`echo "$dir/$ver"|sed 's#\/\/#\/#g'`
-rm -f $dir/go
-ln -sf $fullVer $dir/go
-link=`ls -al $dir/go|awk '{print $NF}'`
+rm -f $GOROOT
+ln -sf $fullVer $GOROOT
+link=`ls -al $GOROOT|awk '{print $NF}'`
 newVer=`basename $link`
 echo "New version $newVer"
