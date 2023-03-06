@@ -40,14 +40,8 @@ do
     if [ "$opt" = "" ]; then
         echo "Invalid input, please retry"
     else
-        #echo "selected: $opt"
-        for line in $lists
-        do
-            if [ "$line" = "$opt" ]; then
-                ver=$opt
-                break 3
-            fi
-        done
+        ver=$opt
+        break
     fi
 done
 
