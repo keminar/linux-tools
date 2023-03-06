@@ -12,7 +12,10 @@ if [ "$dir" = "" ]; then
         dir=`dirname $GOROOT`
     fi
 fi
-
+if [ ! -d "$dir" ];then
+    echo "The $dir is not a directory"
+    exit 3
+fi
 # 检查GOROOT
 if [ "$GOROOT" = "" ]; then
     GOROOT="$dir/go"
