@@ -31,7 +31,7 @@ fi
 
 # 选择新版本
 ver=""
-lists=`find $dir -depth -maxdepth 1 -mindepth 1 -type d -name "go*"|awk -F '/' '{print $NF}'`
+lists=`find $dir -depth -maxdepth 1 -mindepth 1 -type d -name "go[1-9].*"|awk -F '/' '{print $NF}'`
 select opt in $lists
 do
     if [ "$opt" = "" ]; then
