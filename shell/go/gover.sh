@@ -1,14 +1,21 @@
 #!/bin/bash
 SCRIPT=$(basename $0)
 
+# 存放版本列表的目录
 dir=${1:-''}
 if [ "$dir" = "" ]; then
-   echo "Usage: "
-   echo "    $SCRIPT <DIR>"
-   exit 2
+    if [ "$GOROOT" = "" ]; then
+        echo "Usage: "
+        echo "    $SCRIPT <DIR>"
+        exit 2
+    else
+        dir=`dirname $GOROOT`
+    fi
 fi
-if [ $GOROOT = "" ]; then
-   GOROOT="$dir/go"
+
+# 检查GOROOT
+if [ "$GOROOT" = "" ]; then
+    GOROOT="$dir/go"
 fi
 
 if [ ! -L "$GOROOT" ];then
@@ -22,6 +29,7 @@ if [ "$answer" = 'n' ];then
     exit
 fi
 
+# 选择新版本
 ver=""
 lists=`find $dir -depth -maxdepth 1 -mindepth 1 -type d -name "go*"|awk -F '/' '{print $NF}'`
 select opt in $lists
@@ -40,6 +48,10 @@ do
     fi
 done
 
+if [ "$ver" = "" ];then
+    echo "Version list not found"
+    exit 3
+fi
 if [ "$oldVer" = "$ver" ];then
     echo "The new version is the same as the old version"
     exit
