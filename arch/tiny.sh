@@ -113,6 +113,7 @@ function tiny_chroot
 	pacman -S --noconfirm grub; \
 	grub-install --recheck /dev/$DISK; \
 	grub-mkconfig -o /boot/grub/grub.cfg; \
+	echo root:123456 | chpasswd; \
 	$WIFI_UTILS \
 	" |arch-chroot /mnt
 	umount /mnt

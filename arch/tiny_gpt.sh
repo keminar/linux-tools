@@ -8,6 +8,7 @@
 # license	: GPLv2
 # usage		: run ./tiny_gpt.sh
 # 先使用parted分区，boot分区必须使用fat32格式
+# boot 分区500M，要和主分区分开
 ##############################################################
 
 # Abort on any errors
@@ -122,8 +123,10 @@ function tiny_chroot
 	pacman -S --noconfirm efibootmgr; \
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub; \
 	grub-mkconfig -o /boot/grub/grub.cfg; \
+	echo root:123456 | chpasswd; \
 	$WIFI_UTILS \
 	" |arch-chroot /mnt
+	umount /mnt/boot
 	umount /mnt
 }
 
