@@ -28,6 +28,7 @@ pacman -S wget sudo base-devel
 
 cat .xprofile 
 export LANG=zh_CN.utf8
+#export LC_CTYPE=zh_CN.UTF-8
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
