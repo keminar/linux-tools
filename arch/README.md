@@ -12,7 +12,7 @@ archlinux命令行系统安装步骤
 
 注：使用tiny_gpt.sh 要先使用parted分区，boot分区必须使用fat32格式, 或者用fdisk把盘改回dos模式用tiny.sh
 
-archlinux系统GNOME安装
+GNOME安装
 ===
 ```bash
 pacman -S xorg-server
@@ -27,14 +27,16 @@ pacman -S fcitx-im fcitx-rime fcitx-configtool librime fcitx-table-extra fcitx-q
 pacman -S wget sudo base-devel
 
 cat .xprofile 
-export LC_CTYPE=zh_CN.UTF-8
+export LANG=zh_CN.utf8
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
+export XMODIFIERS="@im=fcitx"
 
 ```
 
 轻巧稳定的Mate桌面
 ===
+```
 pacman -S mate mate-extra
-
+```
+* 2023-03-14 fcitx 在gnome使用不了，在mate正常使用
