@@ -180,7 +180,7 @@ sudo virsh net-autostart default
 
 备份当前配置先运行
 ```shell
-sudo virsh dumpxml win10 > win10-dump.xml
+sudo virsh dumpxml win10 > ~/win10-dump.xml
 ```
 
 开始优化配置
@@ -218,6 +218,20 @@ sudo virsh edit win10
   </features>
 ```
 
+CPU核心固定, 要查看 CPU 拓扑，运行 `lscpu -e`：
+```shell
+$ lscpu -e
+CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
+  0    0      0    0 0:0:0:0           是 4200.0000 800.0000 1400.0200
+  1    0      0    1 1:1:1:0           是 4200.0000 800.0000 1399.9969
+  2    0      0    2 2:2:2:0           是 4200.0000 800.0000 1400.0570
+  3    0      0    3 3:3:3:0           是 4200.0000 800.0000 1400.1080
+  4    0      0    0 0:0:0:0           是 4200.0000 800.0000 1399.9950
+  5    0      0    1 1:1:1:0           是 4200.0000 800.0000 1400.0160
+  6    0      0    2 2:2:2:0           是 4200.0000 800.0000 1400.0900
+  7    0      0    3 3:3:3:0           是 4200.0000 800.0000 1400.0850
+
+```
 修改CPU配置， 先找到 `<vcpu>`，修改：
 
 ```xml
@@ -242,11 +256,6 @@ sudo virsh edit win10
 
 # 改进 AMD CPUs 性能
 
-Previously, Nested Page Tables (NPT) had to be disabled on AMD systems running KVM to improve GPU performance because of a very old bug, but the trade off was decreased CPU performance, including stuttering.
-
-There is a kernel patch that resolves this issue, which was accepted into kernel 4.14-stable and 4.9-stable. If you are running the official linux or linux-lts kernel the patch has already been applied (make sure you are on the latest). If you are running another kernel you might need to manually patch yourself.
-Note: Several Ryzen users (see this Reddit thread) have tested the patch, and can confirm that it works, bringing GPU passthrough performance up to near native quality.
-
 Starting with QEMU 3.1 the TOPOEXT cpuid flag is disabled by default. In order to use hyperthreading(SMT) on AMD CPU's you need to manually enable it:
 
 ```xml
@@ -257,6 +266,8 @@ Starting with QEMU 3.1 the TOPOEXT cpuid flag is disabled by default. In order t
 ```
 
 注： 因为我不是AMD的cpu所以没有操作，上面只是一段引用
+
+# 内存大分页
 
 # 文件夹共享
 
