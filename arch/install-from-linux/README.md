@@ -39,5 +39,12 @@ echo root:123456|chpasswd
 pacman -S vim dhcpcd net-tools
 ```
 
-# 官方
+# 退出
+```
+  exit
+  exit
+  reboot
+```
+
+# 官方Wiki
 https://wiki.archlinux.org/title/Install_Arch_Linux_from_existing_Linux
