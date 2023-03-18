@@ -132,7 +132,7 @@ Windows虚拟机使用物理显卡
     Kernel modules: nouveau
   ```
 
-# 安装Qumu组件
+# 安装qemu组件
 
 `````shell
 sudo pacman -S qemu libvirt edk2-ovmf virt-manager dnsmasq ebtables iptables bridge-utils gnu-netcat
