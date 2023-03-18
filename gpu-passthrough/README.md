@@ -1,4 +1,4 @@
-Windows虚拟机使用物理显卡
+Linux宿主+Windows虚拟机使用物理显卡
 ===
 
 这不仅仅是一个教程，也是我自己实际操作的备忘录，以下的操作都和我的软件硬件有紧密联系，你要按自己实际情况调整。文档有参考 [github repository](https://github.com/xiyizi/kvm-config).
