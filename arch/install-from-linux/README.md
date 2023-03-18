@@ -1,3 +1,6 @@
+
+注意： 以下操作都要在命令行模式操作(如: ctrl+alt+f3)，不能在桌面模式的终端操作, 因为在移动旧环境目录后桌面会失效
+
 # 旧系统
 ```
 /dev/sdc2 /
@@ -5,6 +8,7 @@
 ```
 
 # 准备
+
 ```
 cd /tmp/
 wget http://mirrors.163.com/archlinux/iso/2023.03.01/archlinux-bootstrap-x86_64.tar.gz
