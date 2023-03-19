@@ -45,6 +45,12 @@ Linux宿主+Windows虚拟机使用物理显卡
 
   - 制作启动U盘 
   - 使用 [小工具](https://github.com/keminar/linux-tools/tree/master/arch) 协助安装系统
+  - 以下命令可验证虚拟化支持情况
+  ```
+  sudo egrep -o '(vmx|svm)' /proc/cpuinfo
+  sudo lsmod | grep kvm
+  sudo ls /dev/vfio/
+  ```
 
 # 宿主机启用IOMMU
 
@@ -61,14 +67,11 @@ Linux宿主+Windows虚拟机使用物理显卡
   sudo grub-mkconfig -o /boot/grub/grub.cfg
   sudo reboot
   ```
-  4. 使用如下命令验证是否生效
+  4. 使用如下命令之一验证是否生效
   ```shell
-  sudo egrep -o '(vmx|svm)' /proc/cpuinfo
-  sudo lsmod | grep kvm
   sudo dmesg | grep -e "Directed I/O"
   sudo dmesg | grep -e DMAR -e IOMMU
   sudo cat /proc/cmdline | grep iommu
-  sudo ls /dev/vfio/
   ```
 
 # 宿主机启用VFIO
