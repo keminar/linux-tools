@@ -309,12 +309,56 @@ Linux宿主+Windows虚拟机使用物理显卡
   ![alt text](pics/20.png "Add the device or partition to your existing virtual machine")
 
   选择自定义存储, 路径里输入设备路径,如 **/dev/disk/by-id/ata-Crucial_CT256MX100SSD1_14360D295569-part1**
+  
   设备类型选择**Disk device**, Bus type 选择 **SATA** 
   ![alt text](pics/21.png "Add the device or partition to your existing virtual machine")
 
   启动虚拟机,进行磁盘管理, 格式化并挂载
 
 # 使用barrier 共享鼠标键盘
+  
+  推荐把Windows做为服务端, Linux做为客户端. 因为Windows经常会弹确认框时鼠标失焦, 另外Windows作为虚拟机桥接地址做服务更安全, 但是Windows默认开了防火墙，记得打开 24800 端口，这是 barrier 默认监听端口. 需要注意的是鼠标只能从服务端共享给客户端,所以鼠标键盘需要直通给虚拟机,再共享回宿主机. 
+
+  1. Linux 安装
+  ```shell 
+  sudo pacman -S barrier
+  ```
+  去掉SSL配置下Windows机器IP并启动
+
+  2. Windows 直接去 [release](https://github.com/debauchee/barrier/releases) 页面 下载最新版本安装即可。
+
+  3. 安装后点击 “设置服务器”， 点击弹窗中的右上角的图标，加一个显示器，名字就命名为Linux 机器的 “屏幕名”，然后在方格中摆好位置, 同样设置去掉SSL启动, 省的还要生成证书.
+  
+  注: 如果不能使用的话，点击菜单中的 “显示日志”，来查看为啥不能用。
+
+  ## linux 自启动
+  编辑 _~/.config/systemd/user/barrierc.service_
+
+  ```
+  [Unit]
+  Description=Barrier keyboard & mouse sharing software (Server)
+  After=network.target
+
+  [Service]
+  PassEnvironment=DISPLAY
+  ExecStart=/usr/bin/barrierc -f --debug INFO --name bogon --disable-crypto --no-restart [192.168.122.22]:24800
+  Type=simple
+  ProtectHome=read-only
+  ProtectSystem=true
+  PrivateTmp=true
+  Restart=always
+  RestartSec=10
+
+  [Install]
+  WantedBy=default.target
+  ```
+  然后执行
+  ```
+  systemctl --user enable barriers.service
+  ```
+  ## Windows 自启动
+  需要先以管理员身份打开软件，然后菜单中点击设置， 勾选 “开机自启”，然后就可以重启试试，我实测有一个小bug ，就是不管 勾不勾选 “最小化到系统托盘” 右下角都看不到，不过没关系，软件能正常工作。
+
 
 # Evdev 共享鼠标键盘 Mouse, Keyboard  
 
