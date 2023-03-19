@@ -144,8 +144,8 @@ sudo pacman -S qemu libvirt edk2-ovmf virt-manager dnsmasq ebtables iptables bri
 
 把自己用户加到对应组，开虚拟机不需要输入密码
 ```shell
-sudo usermod -a -G libvirt $(who am i)
-sudo usermod -a -G kvm $(who am i)
+sudo usermod -a -G libvirt $(whoami)
+sudo usermod -a -G kvm $(whoami)
 ```
 
 编辑 _/etc/libvirt/qemu.conf_ 将您的 OVMF 固件映像和运行时变量模板添加到 libvirt 配置
