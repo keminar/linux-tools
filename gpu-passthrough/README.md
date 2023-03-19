@@ -284,7 +284,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   </memoryBacking>
   ```
 
-  virt-manager 添加设备-共享文件夹
+  virt-manager 打开虚拟机-添加设备-共享文件夹
 
   启动windows虚拟机,安装[winfsp](https://winfsp.dev/rel/),全部默认下一步即可
 
@@ -294,6 +294,7 @@ Linux宿主+Windows虚拟机使用物理显卡
 
 # 添加物理硬盘
 
+  查看硬盘的设备路径
   ```shell
   $ ls -l /dev/disk/by-id/
   insgesamt 0
@@ -302,17 +303,12 @@ Linux宿主+Windows虚拟机使用物理显卡
   lrwxrwxrwx 1 root root 10 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569-part2 -> ../../sda2
   ```
 
-  Add the device or partition to your existing virtual machine. In virt-manager, open the virtual machine window.
-
+  virt-manager 打开虚拟机- 添加设备-存储
   ![alt text](pics/20.png "Add the device or partition to your existing virtual machine")
 
-  Click on the light bulb to bring up the virtual hardware details. Then select Add Hardware at the bottom.
-
+  选择自定义存储, 路径里输入设备路径,如 **/dev/disk/by-id/ata-Crucial_CT256MX100SSD1_14360D295569-part1**
+  设备类型选择**Disk device**, Bus type 选择 **SATA** 
   ![alt text](pics/21.png "Add the device or partition to your existing virtual machine")
-
-  We want to add a storage, and as device type choose Disk Device. Choose the radio button labelled “Select or create custom storage”. In the corresponding text input field, paste the name of the physical device or partition that you chose before. Set the Bus type to your liking, usually SATA or IDE are a good choice.  Click finish and the physical device is added.
-
-  Make sure the boot device is what you want it to be.
 
 # 使用barrier 共享鼠标键盘
 
