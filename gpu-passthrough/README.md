@@ -331,7 +331,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   
   注: 如果不能使用的话，点击菜单中的 “显示日志”，来查看为啥不能用。
 
-  ## linux 自启动
+  4. linux 自启动
   编辑 _~/.config/systemd/user/barrierc.service_
 
   ```
@@ -356,7 +356,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   ```
   systemctl --user enable barriers.service
   ```
-  ## Windows 自启动
+  5. Windows 自启动
   需要先以管理员身份打开软件，然后菜单中点击设置， 勾选 “开机自启”，然后就可以重启试试，我实测有一个小bug ，就是不管 勾不勾选 “最小化到系统托盘” 右下角都看不到，不过没关系，软件能正常工作。
 
 
