@@ -137,73 +137,70 @@ Linux宿主+Windows虚拟机使用物理显卡
 
 # 安装qemu组件
 
-`````shell
-sudo pacman -S qemu libvirt edk2-ovmf virt-manager dnsmasq ebtables iptables bridge-utils gnu-netcat
-`````
-注： 安装iptables和ebtables会问是否要替换掉iptables-nft，y 确定
+  `````shell
+  sudo pacman -S qemu libvirt edk2-ovmf virt-manager dnsmasq ebtables iptables bridge-utils gnu-netcat
+  `````
+  注： 安装iptables和ebtables会问是否要替换掉iptables-nft，y 确定
 
-把自己用户加到对应组，开虚拟机不需要输入密码
-```shell
-sudo usermod -a -G libvirt $(whoami)
-sudo usermod -a -G kvm $(whoami)
-```
+  把自己用户加到对应组，开虚拟机不需要输入密码
+  ```shell
+  sudo usermod -a -G libvirt $(whoami)
+  sudo usermod -a -G kvm $(whoami)
+  ```
 
-编辑 _/etc/libvirt/qemu.conf_ 将您的 OVMF 固件映像和运行时变量模板添加到 libvirt 配置
-```shell
-nvram = [
-	"/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"
-]
-```
+  编辑 _/etc/libvirt/qemu.conf_ 将您的 OVMF 固件映像和运行时变量模板添加到 libvirt 配置
+  ```shell
+  nvram = [
+	  "/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"
+  ]
+  ```
 
-安装好后， 开始libvirtd服务，和自动启动nat网卡
-```shell
-sudo systemctl enable --now libvirtd
-sudo virsh net-start default
-sudo virsh net-autostart default
-```
+  安装好后， 开始libvirtd服务，和自动启动nat网卡
+  ```shell
+  sudo systemctl enable --now libvirtd
+  sudo virsh net-start default
+  sudo virsh net-autostart default
+  ```
 
 # 创建虚拟机
 
- 使用 **virt-manager** 配置虚拟机的大部分过程都无需指导，只要按照屏幕上的提示即可
+  使用 **virt-manager** 配置虚拟机的大部分过程都无需指导，只要按照屏幕上的提示即可
 
- 特别注意如下步骤:
- - 在虚拟机创建向导要求您命名虚拟机时（点击“完成”前的最后一步），勾选“在安装前自定义配置”
- - 在“概况”屏幕，将“固件”选为"UEFI"
- - 在“CPUs”屏幕，将CPU型号改为"host-passthrough"
- - 如果要最小化IO开销，请点击“添加硬件”，并在“控制器：中选择“SCSI”类型，型号为 "VirtIO SCSI"
+  特别注意如下步骤:
+  - 在虚拟机创建向导要求您命名虚拟机时（点击“完成”前的最后一步），勾选“在安装前自定义配置”
+  - 在“概况”屏幕，将“固件”选为"UEFI"
+  - 在“CPUs”屏幕，将CPU型号改为"host-passthrough"
+  - 如果要最小化IO开销，请点击“添加硬件”，并在“控制器：中选择“SCSI”类型，型号为 "VirtIO SCSI"
    
-   - Windows 不包含VirtIO驱动程序，所以你需要从[这里](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)下载包含驱动程序的 ISO 并且添加一个IDE CDROM（Windows 7之后可以使用SATA）并且连接到刚才的 ISO 。否则在安装过程中 Windows 无法识别 VirtIO 控制器。当 Windows 安装程序要求您选择要安装的磁盘时，加载 CD-ROM 下 visscsi 目录下的驱动程序。
+    - Windows 不包含VirtIO驱动程序，所以你需要从[这里](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)下载包含驱动程序的 ISO 并且添加一个IDE CDROM（Windows 7之后可以使用SATA）并且连接到刚才的 ISO 。否则在安装过程中 Windows 无法识别 VirtIO 控制器。当 Windows 安装程序要求您选择要安装的磁盘时，加载 CD-ROM 下 visscsi 目录下的驱动程序。
 
- - 虚拟机在开始安装时您还可能会直接进入UEFI菜单，是因为虚拟机在启动的时候可能并未检测到正确的ISO文件，您需要手动指定引导顺序。输入“exit”并选择“boot manager”，您将会进入一个选择引导设备的菜单。
- - 至少为宿主机留下一个鼠标和/或键盘，防止客户机出现问题的时候无法操作宿主机
-  
-  
+  - 虚拟机在开始安装时您还可能会直接进入UEFI菜单，是因为虚拟机在启动的时候可能并未检测到正确的ISO文件，您需要手动指定引导顺序。输入“exit”并选择“boot manager”，您将会进入一个选择引导设备的菜单。
+  - 至少为宿主机留下一个鼠标和/或键盘，防止客户机出现问题的时候无法操作宿主机
+  - 刚装好的系统-设备管理器里会有2个没有驱动,安装virtio-win后即可正常
 
-安装完系统后关闭虚拟机
+# 虚拟机优化
 
-备份当前配置先运行
-```shell
-sudo virsh dumpxml win10 > ~/win10-dump.xml
-```
+  安装完系统后关闭虚拟机,备份当前配置先运行
+  ```shell
+  sudo virsh dumpxml win10 > ~/win10-dump.xml
+  ```
 
-开始优化配置
-```shell
-sudo virsh edit win10
-```
+  开始优化配置
+  ```shell
+  sudo virsh edit win10
+  ```
 
-第一步，第一行内容应该是这样的
-```xml
-<domain type='kvm'>
-```
-修改为
+  第一步，第一行内容默认应该是这样的
+  ```xml
+  <domain type='kvm'>
+  ```
+  修改为
+  ```xml
+  <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+  ```
 
-```xml
-<domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-```
-
-把 features 括号内的内容修改为:
-
-```xml
+  把 features 括号内的内容修改为:
+  ```xml
   <features>
     <acpi/>
     <apic/>
@@ -219,12 +216,12 @@ sudo virsh edit win10
     <vmport state="off"/>
     <ioapic driver="kvm"/>
   </features>
-```
+  ```
 
-CPU核心固定, 要查看 CPU 拓扑，运行 `lscpu -e`：
-```shell
-$ lscpu -e
-CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
+  CPU核心固定, 要查看 CPU 拓扑，运行 `lscpu -e`：
+  ```shell
+  $ lscpu -e
+  CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
   0    0      0    0 0:0:0:0           是 4200.0000 800.0000 1400.0200
   1    0      0    1 1:1:1:0           是 4200.0000 800.0000 1399.9969
   2    0      0    2 2:2:2:0           是 4200.0000 800.0000 1400.0570
@@ -233,132 +230,153 @@ CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
   5    0      0    1 1:1:1:0           是 4200.0000 800.0000 1400.0160
   6    0      0    2 2:2:2:0           是 4200.0000 800.0000 1400.0900
   7    0      0    3 3:3:3:0           是 4200.0000 800.0000 1400.0850
+  ```
+  修改CPU配置， 先找到 `<vcpu>`，修改：
 
-```
-修改CPU配置， 先找到 `<vcpu>`，修改：
+  ```xml
+  <vcpu placement='static'>4</vcpu>
+  <cputune>
+    <vcpupin vcpu='0' cpuset='2'/>
+    <vcpupin vcpu='1' cpuset='6'/>
+    <vcpupin vcpu='2' cpuset='3'/>
+    <vcpupin vcpu='3' cpuset='7'/>
+    <emulatorpin cpuset='0,4'/>
+  </cputune>
+  ```
 
-```xml
-<vcpu placement='static'>4</vcpu>
-<cputune>
-  <vcpupin vcpu='0' cpuset='2'/>
-  <vcpupin vcpu='1' cpuset='6'/>
-  <vcpupin vcpu='2' cpuset='3'/>
-  <vcpupin vcpu='3' cpuset='7'/>
-  <emulatorpin cpuset='0,4'/>
-</cputune>
-```
+  找到 `<CPU>` 调整为如下内容:
+  ```xml
+  <cpu mode='host-passthrough' check='none'>
+    <topology sockets='1' cores='2' threads='2'/>
+    <cache level='3' mode='emulate'/>
+  </cpu>
+  ```
 
-找到 `<CPU>` 调整为如下内容:
+## 改进 AMD CPUs 性能
 
-```xml
-<cpu mode='host-passthrough' check='none'>
-  <topology sockets='1' cores='2' threads='2'/>
-  <cache level='3' mode='emulate'/>
-</cpu>
-```
+  从 QEMU 3.1 开始 TOPOEXT cpuid flag 默认被禁用. 为了在AMD CPU上使用 hyperthreading(SMT) 需要手动开启:
 
-# 改进 AMD CPUs 性能
+  ```xml
+  <cpu mode='host-passthrough' check='none'>
+    <topology sockets='1' cores='2' threads='2'/>
+    <cache level='3' mode='emulate'/>
+    <feature policy='require' name='topoext'/>
+  </cpu>
+  ```
 
-Starting with QEMU 3.1 the TOPOEXT cpuid flag is disabled by default. In order to use hyperthreading(SMT) on AMD CPU's you need to manually enable it:
-
-```xml
- <cpu mode='host-passthrough' check='none'>
- <topology sockets='1' cores='4' threads='2'/>
- <feature policy='require' name='topoext'/>
- </cpu>
-```
-
-注： 因为我不是AMD的cpu所以没有操作，上面只是一段引用
+  注： 因为我不是AMD的cpu所以没有操作，上面只是一段引用
 
 # 内存大分页
+  目前还没有配置,请参考官网, 略
 
 # 文件夹共享
+  virtiofs文件系统实现了一个半虚拟化的virtio-fs设备驱动,可以实现主机<->虚拟机文件共享,可以在虚拟机挂载**一个**主机目录
 
+  优点:
+  - 不经过网卡,速度更好
+  - 百度云可直接下载到共享目录(百度云是不能直接下载到samba挂载目录的)
+
+  虚拟机xml添加配置
+  ```shell
+  <memoryBacking>
+    <source type='memfd'/>
+    <access mode='shared'/>
+  </memoryBacking>
+  ```
+
+  virt-manager 添加设备-共享文件夹
+
+  启动windows虚拟机,安装[winfsp](https://winfsp.dev/rel/),全部默认下一步即可
+
+  win+r打开运行,输入services.msc 在服务中,把 VirtIO-FS Service启动并设置成自动启动
+
+  如果设备管理器中是否有大容量存储设备没有驱动,使用virtio-win驱动安装, 如果还没有共享文件,重启下虚拟机
 
 # 添加物理硬盘
 
-```shell
-$ ls -l /dev/disk/by-id/
-insgesamt 0
-lrwxrwxrwx 1 root root 9 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569 -> ../../sda
-lrwxrwxrwx 1 root root 10 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569-part1 -> ../../sda1
-lrwxrwxrwx 1 root root 10 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569-part2 -> ../../sda2
-```
+  ```shell
+  $ ls -l /dev/disk/by-id/
+  insgesamt 0
+  lrwxrwxrwx 1 root root 9 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569 -> ../../sda
+  lrwxrwxrwx 1 root root 10 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569-part1 -> ../../sda1
+  lrwxrwxrwx 1 root root 10 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569-part2 -> ../../sda2
+  ```
 
-Add the device or partition to your existing virtual machine. In virt-manager, open the virtual machine window.
+  Add the device or partition to your existing virtual machine. In virt-manager, open the virtual machine window.
 
-![alt text](pics/20.png "Add the device or partition to your existing virtual machine")
+  ![alt text](pics/20.png "Add the device or partition to your existing virtual machine")
 
-Click on the light bulb to bring up the virtual hardware details. Then select Add Hardware at the bottom.
+  Click on the light bulb to bring up the virtual hardware details. Then select Add Hardware at the bottom.
 
-![alt text](pics/21.png "Add the device or partition to your existing virtual machine")
+  ![alt text](pics/21.png "Add the device or partition to your existing virtual machine")
 
-We want to add a storage, and as device type choose Disk Device. Choose the radio button labelled “Select or create custom storage”. In the corresponding text input field, paste the name of the physical device or partition that you chose before. Set the Bus type to your liking, usually SATA or IDE are a good choice.  Click finish and the physical device is added.
+  We want to add a storage, and as device type choose Disk Device. Choose the radio button labelled “Select or create custom storage”. In the corresponding text input field, paste the name of the physical device or partition that you chose before. Set the Bus type to your liking, usually SATA or IDE are a good choice.  Click finish and the physical device is added.
 
-Make sure the boot device is what you want it to be.
+  Make sure the boot device is what you want it to be.
 
-# Evdev Passthrough Mouse, Keyboard  
+# 使用barrier 共享鼠标键盘
 
-Input is often the first hurdle presented after getting a passthrough VM up and running. Without Spice or VNC, users often resort to hacks and workarounds to control their virtual machine. Passing through USB devices via evdev has become a popular if badly documented way of handling input. The advantage of evdev is that it has very low latency and overhead. The downside is that it becomes frustrating to switch between the host and guest.
+# Evdev 共享鼠标键盘 Mouse, Keyboard  
 
-While a physical KVM switch will always be a viable option, complete solutions with modern video connectors can be very expensive, and start to eat into a build budget when compounded with other hardware quality of life improvements. Evdev passhthrough is a good alternative for those  that can’t afford hardware solutions but still want low latency and accurate input.
+  Input is often the first hurdle presented after getting a passthrough VM up and running. Without Spice or VNC, users often resort to hacks and workarounds to control their virtual machine. Passing through USB devices via evdev has become a popular if badly documented way of handling input. The advantage of evdev is that it has very low latency and overhead. The downside is that it becomes frustrating to switch between the host and guest.
+
+  While a physical KVM switch will always be a viable option, complete solutions with modern video connectors can be very expensive, and start to eat into a build budget when compounded with other hardware quality of life improvements. Evdev passhthrough is a good alternative for those  that can’t afford hardware solutions but still want low latency and accurate input.
 
 ## What is Evdev?
 
-Evdev is an input interface built into the Linux kernel. QEMU’s evdev passthrough support allows a user to redirect evdev events to a guest. These events can include mouse movements and key presses. By hitting both Ctrl keys at the same time, QEMU can toggle the input recipient. QEMU’s evdev passthrough also features almost no latency, making it perfect for gaming. The main downside to evdev passthrough is the lack of button rebinding – and in some cases, macro keys won’t even work at all.
+  Evdev is an input interface built into the Linux kernel. QEMU’s evdev passthrough support allows a user to redirect evdev events to a guest. These events can include mouse movements and key presses. By hitting both Ctrl keys at the same time, QEMU can toggle the input recipient. QEMU’s evdev passthrough also features almost no latency, making it perfect for gaming. The main downside to evdev passthrough is the lack of button rebinding – and in some cases, macro keys won’t even work at all.
 
-This setup has no requirements besides a keyboard, mouse, and working passthrough setup. This guide assumes you have already configured these.
+  This setup has no requirements besides a keyboard, mouse, and working passthrough setup. This guide assumes you have already configured these.
 
 ## Configuring Evdev
 
-To start, you will need to find the input device IDs for your mouse and keyboard. This can get a little finicky, as some keyboard manufacturers do this differently. The Linux kernel exposes two different locations for evdev devices: `/dev/input`, and `/dev/input/by-id`. `/dev/input/by-id` is generally preferred, as you can pass through input devices without worrying about the file path changing if you plug/unplug additional devices. List the contents of this directory:
+  To start, you will need to find the input device IDs for your mouse and keyboard. This can get a little finicky, as some keyboard manufacturers do this differently. The Linux kernel exposes two different locations for evdev devices: `/dev/input`, and `/dev/input/by-id`. `/dev/input/by-id` is generally preferred, as you can pass through input devices without worrying about the file path changing if you plug/unplug additional devices. List the contents of this directory:
 
-```shell
-ls /dev/input/by-id
-```
+  ```shell
+  ls /dev/input/by-id
+  ```
 
-It will contain your input devices. Take note of which ones you want to pass through. Be careful here, as I have noticed two common discrepancies. The first is an “if01” or “if02” or similar near the end of an input device name. The best method to find out which one is correct is to use “cat.” Run:
+  It will contain your input devices. Take note of which ones you want to pass through. Be careful here, as I have noticed two common discrepancies. The first is an “if01” or “if02” or similar near the end of an input device name. The best method to find out which one is correct is to use “cat.” Run:
 
-```shell
-cat /dev/input/by-id/[input device id]
-```
+  ```shell
+  cat /dev/input/by-id/[input device id]
+  ```
 
-Press random keys on the keyboard you want to pass through. If garbled characters appear on-screen, you have selected the correct one. If not, try another until you find the correct one. Use Ctrl+C to cancel the “cat” process. Another issue to be wary of is the input device type. A lot of mice will have keyboard inputs, and some keyboards even have mouse inputs. Select the input device that corresponds to your device. For example, if you see two entries for your keyboard, with one ending with “event-kbd”  and the other ending with “event-mouse,” you will generally want to pick “event-kbd.” Some hardware manufacturers hate following standards, though, and you might find yourself needing to switch this up.
+  Press random keys on the keyboard you want to pass through. If garbled characters appear on-screen, you have selected the correct one. If not, try another until you find the correct one. Use Ctrl+C to cancel the “cat” process. Another issue to be wary of is the input device type. A lot of mice will have keyboard inputs, and some keyboards even have mouse inputs. Select the input device that corresponds to your device. For example, if you see two entries for your keyboard, with one ending with “event-kbd”  and the other ending with “event-mouse,” you will generally want to pick “event-kbd.” Some hardware manufacturers hate following standards, though, and you might find yourself needing to switch this up.
 
-Now that you’ve noted the devices you want to use evdev with, it’s time to enable it in your libvirt XML. Open the XML with the following, replacing “nano” with your editor of choice, and “win10” with the name of your libvirt domain:
+  Now that you’ve noted the devices you want to use evdev with, it’s time to enable it in your libvirt XML. Open the XML with the following, replacing “nano” with your editor of choice, and “win10” with the name of your libvirt domain:
 
-`nano virsh edit win10`
+  `nano virsh edit win10`
 
-Make sure the first line looks like this:  
+  Make sure the first line looks like this:  
 
-```shell
-<domain type='kvm' id='1' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-```
+  ```shell
+  <domain type='kvm' id='1' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+  ```
 
-If it doesn’t, replace the first line with that. Next, add the following near the bottom, directly above `</domain>`:
+  If it doesn’t, replace the first line with that. Next, add the following near the bottom, directly above `</domain>`:
 
-```shell
-<qemu:commandline>
-  <qemu:arg value='-object'/>
-  <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/MOUSE_NAME'/>
-  <qemu:arg value='-object'/>
-  <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/KEYBOARD_NAME,grab_all=on,repeat=on'/>
-</qemu:commandline>
-```
+  ```shell
+  <qemu:commandline>
+    <qemu:arg value='-object'/>
+    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/MOUSE_NAME'/>
+    <qemu:arg value='-object'/>
+    <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/KEYBOARD_NAME,grab_all=on,repeat=on'/>
+  </qemu:commandline>
+  ```
 
-If you already have qemu:commandline set up for whatever reason, add the qemu:arg options above to that section. Don’t add another set of qemu:commandline arguments. Replace the `MOUSE_NAME` and `KEYBOARD_NAME` parts with the id of your input devices. Next, save the XML. In nano, you can do this with Ctrl+X, then Y, then Enter. Boot up your VM. It should now work, with the keyboard and mouse being directly passed to the VM! By hitting **both Ctrl keys at the same time**, you can switch between hosts. Wonderful, isn’t it?
+  If you already have qemu:commandline set up for whatever reason, add the qemu:arg options above to that section. Don’t add another set of qemu:commandline arguments. Replace the `MOUSE_NAME` and `KEYBOARD_NAME` parts with the id of your input devices. Next, save the XML. In nano, you can do this with Ctrl+X, then Y, then Enter. Boot up your VM. It should now work, with the keyboard and mouse being directly passed to the VM! By hitting **both Ctrl keys at the same time**, you can switch between hosts. Wonderful, isn’t it?
 
-I had to use the following block in my win10 xml to get things working:  
+  I had to use the following block in my win10 xml to get things working:  
 
-```xml
-<qemu:commandline>
+  ```xml
+  <qemu:commandline>
     <qemu:arg value='-object'/>
     <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/usb-MOSART_Semi._2.4G_Keyboard_Mouse-if01-event-mouse'/>
     <qemu:arg value='-object'/>
     <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd,grab_all=on,repeat=on'/>
   </qemu:commandline>
-</domain>
-```
+  ```
 
 ## 故障
 ### Evdev Permission Errors
@@ -455,59 +473,58 @@ cgroup_device_acl = [
 ```
 
 
-
-
 # 参考链接
-https://github.com/xiyizi/kvm-config 
+  https://github.com/xiyizi/kvm-config 
 
-https://ckirbach.wordpress.com/2017/07/25/how-to-add-a-physical-device-or-physical-partition-as-virtual-hard-disk-under-virt-manager/
+  https://ckirbach.wordpress.com/2017/07/25/how-to-add-a-physical-device-or-physical-partition-as-virtual-hard-disk-under-virt-manager/
 
-https://mathiashueber.com/cpu-pinning-on-amd-ryzen/#Virtual-machine-CPU-configuration
+  https://mathiashueber.com/cpu-pinning-on-amd-ryzen/#Virtual-machine-CPU-configuration
 
-https://heiko-sieger.info/running-windows-10-on-linux-using-kvm-with-vga-passthrough/#Two_graphics_processors
+  https://heiko-sieger.info/running-windows-10-on-linux-using-kvm-with-vga-passthrough/#Two_graphics_processors
 
-https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF#CPU_pinning
+  https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF#CPU_pinning
 
-https://mathiashueber.com/configuring-hugepages-use-virtual-machine/
+  https://mathiashueber.com/configuring-hugepages-use-virtual-machine/
 
-https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
+  https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
 
-https://bbs.archlinux.org/viewtopic.php?id=69454
+  https://bbs.archlinux.org/viewtopic.php?id=69454
 
-https://python-evdev.readthedocs.io/en/latest/tutorial.html
+  https://python-evdev.readthedocs.io/en/latest/tutorial.html
 
-https://github.com/jedisct1/piknik
+  https://github.com/jedisct1/piknik
 
-https://wiki.archlinuxcn.org/wiki/PCI_passthrough_via_OVMF﻿
+  https://wiki.archlinuxcn.org/wiki/PCI_passthrough_via_OVMF﻿
 
-https://documentation.suse.com/zh-cn/sles/15-SP3/html/SLES-all/app-gpu-passthru.html
+  https://documentation.suse.com/zh-cn/sles/15-SP3/html/SLES-all/app-gpu-passthru.html
 
-https://liucreator.gitlab.io/zh/posts/0x0b-single-gpu-passthrough/main/
+  https://liucreator.gitlab.io/zh/posts/0x0b-single-gpu-passthrough/main/
 
-https://ivonblog.com/posts/archlinux-gpu-passthrough/
+  https://ivonblog.com/posts/archlinux-gpu-passthrough/
 
-https://ivonblog.com/posts/archlinux-qemu-virt-manager/
+  https://ivonblog.com/posts/archlinux-qemu-virt-manager/
 
-https://blog.51cto.com/u_14204744/5418824
+  https://blog.51cto.com/u_14204744/5418824
 
-https://www.bilibili.com/video/BV1k341127oh/
+  https://www.bilibili.com/video/BV1k341127oh/
 
-http://www.bryh.cn/a/22000.html
+  http://www.bryh.cn/a/22000.html
 
-https://lantian.pub/article/modify-computer/laptop-intel-nvidia-optimus-passthrough.lantian/
+  https://lantian.pub/article/modify-computer/laptop-intel-nvidia-optimus-passthrough.lantian/
 
-https://www.jianshu.com/p/e258562d04dd
+  https://www.jianshu.com/p/e258562d04dd
 
-https://www.doowzs.com/posts/2021/04/rtx-vfio-passthrough/
+  https://www.doowzs.com/posts/2021/04/rtx-vfio-passthrough/
 
-https://github.com/k-spit/gpu-passthrough
+  https://github.com/k-spit/gpu-passthrough
 
-https://www.codeplayer.org/Blog/%E5%8F%8C%E6%98%BE%E5%8D%A1%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%8B%AC%E6%98%BE%E7%9B%B4%E9%80%9A.html
+ 
+  https://www.codeplayer.org/Blog/%E5%8F%8C%E6%98%BE%E5%8D%A1%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%8B%AC%E6%98%BE%E7%9B%B4%E9%80%9A.html
 
-http://www.360doc.com/content/23/0118/17/4703094_1064119167.shtml
+  http://www.360doc.com/content/23/0118/17/4703094_1064119167.shtml
 
-https://jiajunhuang.com/articles/2021_11_26-use_barrier.md.html
+  https://jiajunhuang.com/articles/2021_11_26-use_barrier.md.html
 
-https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Passing_keyboard/mouse_via_Evdev
+  https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Passing_keyboard/mouse_via_Evdev
 
-https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
+  https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
