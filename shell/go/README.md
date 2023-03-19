@@ -1,7 +1,9 @@
 Golang 版本切换
 ===
 
-    把多个golang版本包下载并解压到指定目录,需要一直go软链指向任意一个版本,如下所示
+有时不同的项目可能需要不同的go来编译,所以有了这个小工具
+
+把多个golang版本包下载并解压到指定目录,需要一直go软链指向任意一个版本,如下所示
 
 ```shell
 
@@ -14,7 +16,7 @@ drwxr-xr-x Oct go1.18.7
 
 使用方法
 ===
-    执行 _gover_ 即可, 如下:
+要切换go版本时, 执行 _gover_ 即可, 如下:
 ```shell
 $ /data/bin/gover
 Current version go1.18.7, do you need to change [y|n]?
