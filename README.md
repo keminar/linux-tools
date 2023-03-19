@@ -14,7 +14,7 @@ Gpu-直通
 
 Shell
 ===
-	一些日常使用的脚本
+	一些日常使用的脚本, 如golang版本切换, 连接ssh跨session保管私钥的密码等
 Vim
 ===
 	Vim 简单配置
