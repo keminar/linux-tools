@@ -276,7 +276,9 @@ Linux宿主+Windows虚拟机使用物理显卡
   - 不经过网卡,速度更好
   - 百度云可直接下载到共享目录(百度云是不能直接下载到samba挂载目录的)
 
-  虚拟机xml添加配置
+  缺点: 我测试的只能添加一个共享文件夹,且盘符为Z
+
+  虚拟机xml添加配置, 和`<memory>`同级缩进
   ```shell
   <memoryBacking>
     <source type='memfd'/>
@@ -309,6 +311,8 @@ Linux宿主+Windows虚拟机使用物理显卡
   选择自定义存储, 路径里输入设备路径,如 **/dev/disk/by-id/ata-Crucial_CT256MX100SSD1_14360D295569-part1**
   设备类型选择**Disk device**, Bus type 选择 **SATA** 
   ![alt text](pics/21.png "Add the device or partition to your existing virtual machine")
+
+  启动虚拟机,进行磁盘管理, 格式化并挂载
 
 # 使用barrier 共享鼠标键盘
 
