@@ -311,6 +311,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   选择自定义存储, 路径里输入设备路径,如 **/dev/disk/by-id/ata-Crucial_CT256MX100SSD1_14360D295569-part1**
   
   设备类型选择**Disk device**, Bus type 选择 **SATA** 
+  
   ![alt text](pics/21.png "Add the device or partition to your existing virtual machine")
 
   启动虚拟机,进行磁盘管理, 格式化并挂载
