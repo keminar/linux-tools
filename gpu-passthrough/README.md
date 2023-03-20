@@ -3,7 +3,7 @@ Linux宿主+Windows虚拟机使用物理显卡
 
 这不是一个通用教程，这是我用了几年Virtualbox饱受经常性系统间复制黏贴失效，虚拟机性能低下之后，自己电脑尝试使用Qemu虚拟化操作的备忘录。发现这几年Qemu变化好大，早些年全命令行操作现在也有图形界面了，鼠标定位问题也不存在了。文档记录和我的软件硬件有紧密联系，你要按自己实际情况调整。文档有参考 [github repository](https://github.com/xiyizi/kvm-config).
 
-    比windows宿主+Linux虚拟机好在哪
+  ==比windows宿主+Linux虚拟机好在哪==
   
   - 可以切换多个不同windows版本, Linux 使用物理显卡
   - 方便对windows做镜像备份
