@@ -329,8 +329,6 @@ Linux宿主+Windows虚拟机使用物理显卡
   2. Windows 直接去 [release](https://github.com/debauchee/barrier/releases) 页面 下载最新版本安装即可。
 
   3. 安装后点击 “设置服务器”， 点击弹窗中的右上角的图标，加一个显示器，名字就命名为Linux 机器的 “屏幕名”，然后在方格中摆好位置, 同样设置去掉SSL启动, 省的还要生成证书.
-  
-  注: 如果不能使用的话，点击菜单中的 “显示日志”，来查看为啥不能用。
 
   4. linux 自启动
   编辑 _~/.config/systemd/user/barrierc.service_
@@ -358,7 +356,9 @@ Linux宿主+Windows虚拟机使用物理显卡
   systemctl --user enable barriers.service
   ```
   5. Windows 自启动
-  需要先以管理员身份打开软件，然后菜单中点击设置， 勾选 “开机自启”，然后就可以重启试试，我实测有一个小bug ，就是不管 勾不勾选 “最小化到系统托盘” 右下角都看不到，不过没关系，软件能正常工作。
+  自启动是启动的系统服务。可以Win+R打开services.msc找到Barrier看是否是自动启动，检查当前状态。如果正常启动 **任务管理器-详细信息** 里能找到两个进程 barrierd.exe 和 barriers.exe ,如果显示启动但是没有barriers.exe就可能是和barrier.exe图形设置冲突了。需要以管理员身份打开barrier软件，然后菜单中点击设置， 不要勾选 “Minimize to System Tray”，“Hide on startup”， “Start Barrier on startup” 点击确定，并重启服务
+  
+  注: 如果不能使用的话，点击菜单中的 “显示日志”，来查看为啥不能用。
 
 
 # Evdev 共享鼠标键盘 Mouse, Keyboard  
