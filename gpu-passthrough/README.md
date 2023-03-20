@@ -320,13 +320,13 @@ Linux宿主+Windows虚拟机使用物理显卡
   
   推荐把Windows做为服务端, Linux做为客户端. 因为Windows经常会弹确认框时鼠标失焦, 另外Windows作为虚拟机桥接地址做服务更安全, 但是Windows默认开了防火墙，记得打开 24800 端口，这是 barrier 默认监听端口. 需要注意的是鼠标只能从服务端共享给客户端,所以鼠标键盘需要直通给虚拟机,再共享回宿主机. 
 
-  1. Linux 安装
+  1. Windows 直接去 [release](https://github.com/debauchee/barrier/releases) 页面 下载最新版本安装即可。安装后同样在设置去掉SSL启动, 省的还要生成证书。选择“服务端” 点击 “设置服务器”， 点击弹窗中的右上角的图标，加一个显示器，名字就命名为Linux 机器的 “屏幕名”，然后在方格中摆好位置确定, 启动服务。
+
+  2. Linux 安装
   ```shell 
   sudo pacman -S barrier
   ```
   设置去掉SSL配置， 主页面选择客户端填写要连接的服务端机器IP并启动
-
-  2. Windows 直接去 [release](https://github.com/debauchee/barrier/releases) 页面 下载最新版本安装即可。安装后同样在设置去掉SSL启动, 省的还要生成证书。选择“服务端” 点击 “设置服务器”， 点击弹窗中的右上角的图标，加一个显示器，名字就命名为Linux 机器的 “屏幕名”，然后在方格中摆好位置确定, 启动服务。
 
   3. linux 客户端自启动
   编辑 _~/.config/systemd/user/barrierc.service_
