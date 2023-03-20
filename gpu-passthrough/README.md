@@ -305,7 +305,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   lrwxrwxrwx 1 root root 10 23. Jul 21:05 ata-Crucial_CT256MX100SSD1_14360D295569-part2 -> ../../sda2
   ```
 
-  virt-manager 打开虚拟机- 添加设备-存储
+  virt-manager 打开虚拟机- 添加硬件-存储
   ![alt text](pics/20.png "Add the device or partition to your existing virtual machine")
 
   选择自定义存储, 路径里输入设备路径,如 **/dev/disk/by-id/ata-Crucial_CT256MX100SSD1_14360D295569-part1**
@@ -315,6 +315,16 @@ Linux宿主+Windows虚拟机使用物理显卡
   ![alt text](pics/21.png "Add the device or partition to your existing virtual machine")
 
   启动虚拟机,进行磁盘管理, 格式化并挂载
+  
+# 虚拟硬盘优化
+
+  首先在安装系统前最好设置为 VirtIO Disk ,其次硬盘设置性能选项中IO 模式由 “default” 或 “native” 改成 “threads.”
+
+# 显卡直通
+
+  virt-manager 打开虚拟机- 添加硬件-PCI设备-找到我的显卡 VGA compatible controller [0300]: NVIDIA Corporation TU104 [GeForce RTX 2060] [10de:1e89] (rev a1) 
+  
+  这里遇到一个奇怪问题,如果添加了显卡一起的声卡,USB等硬件,则虚拟机无法出声音,U盘在虚拟机识别.  如果只加 **10de:1e89**  一条,则模拟声卡可以播放虚拟机声音,U盘在主机识别.
 
 # 使用barrier 共享鼠标键盘
   
@@ -357,9 +367,11 @@ Linux宿主+Windows虚拟机使用物理显卡
   自启动是启动的系统服务。可以Win+R打开services.msc找到Barrier看是否是自动启动，检查当前状态。如果正常启动 **任务管理器-详细信息** 里能找到两个进程 barrierd.exe 和 barriers.exe ,如果显示启动但是没有barriers.exe就可能是和barrier.exe图形设置冲突了。需要以管理员身份打开barrier软件，然后菜单中点击设置， 不要勾选 “Minimize to System Tray”，“Hide on startup”， “Start Barrier on startup” 点击确定，并重启服务
   
   注: 如果不能使用的话，点击菜单中的 “显示日志”，来查看为啥不能用。
+  
+  小技巧: 把Linux锁屏快捷键同样设置为Win+L, 在Linux(客户端)上按Win+L可同时锁住2个系统
 
 
-# Evdev 共享鼠标键盘 Mouse, Keyboard  
+# Evdev 共享鼠标键盘 Mouse, Keyboard  [未成功]
 
   Input is often the first hurdle presented after getting a passthrough VM up and running. Without Spice or VNC, users often resort to hacks and workarounds to control their virtual machine. Passing through USB devices via evdev has become a popular if badly documented way of handling input. The advantage of evdev is that it has very low latency and overhead. The downside is that it becomes frustrating to switch between the host and guest.
 
@@ -561,7 +573,6 @@ cgroup_device_acl = [
 
   https://github.com/k-spit/gpu-passthrough
 
- 
   https://www.codeplayer.org/Blog/%E5%8F%8C%E6%98%BE%E5%8D%A1%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%8B%AC%E6%98%BE%E7%9B%B4%E9%80%9A.html
 
   http://www.360doc.com/content/23/0118/17/4703094_1064119167.shtml
