@@ -527,6 +527,13 @@ cgroup_device_acl = [
 ]
 ```
 
+# 设置自启动
+
+  我的虚拟机名字叫 win10 , 确保libvirtd 服务会自启动 `systemctl enable libvirtd`
+  
+  打开开机启动 `virsh autostart win10`
+  
+  关闭自启动 `virsh autostart win10 --disable`
 
 # 参考链接
   https://github.com/xiyizi/kvm-config 
@@ -582,3 +589,5 @@ cgroup_device_acl = [
   https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Passing_keyboard/mouse_via_Evdev
 
   https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
+  
+  https://www.cyberciti.biz/faq/rhel-centos-linux-kvm-virtualization-start-virtual-machine-guest/
