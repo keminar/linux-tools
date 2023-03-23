@@ -42,6 +42,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 echo root:123456|chpasswd
 pacman -S vim dhcpcd net-tools
 ```
+上面为硬盘GPT方案，如果盘为DOS的可参考从ISO安装脚本
 
 # 退出
 ```
