@@ -185,20 +185,8 @@ Linux宿主+Windows虚拟机使用物理显卡
   sudo virsh dumpxml win10 > ~/win10-dump.xml
   ```
 
-  开始优化配置
-  ```shell
-  sudo virsh edit win10
-  ```
-
-  第一步，第一行内容默认应该是这样的
-  ```xml
-  <domain type='kvm'>
-  ```
-  修改为
-  ```xml
-  <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-  ```
-
+  开始优化配置 `sudo virsh edit win10`
+  
   把 features 括号内的内容修改为:
   ```xml
   <features>
@@ -234,23 +222,28 @@ Linux宿主+Windows虚拟机使用物理显卡
   修改CPU配置， 先找到 `<vcpu>`，修改：
 
   ```xml
-  <vcpu placement='static'>4</vcpu>
+  <vcpu placement='static'>6</vcpu>
   <cputune>
     <vcpupin vcpu='0' cpuset='2'/>
     <vcpupin vcpu='1' cpuset='6'/>
     <vcpupin vcpu='2' cpuset='3'/>
     <vcpupin vcpu='3' cpuset='7'/>
+    <vcpupin vcpu='4' cpuset='1'/>
+    <vcpupin vcpu='5' cpuset='5'/>
     <emulatorpin cpuset='0,4'/>
   </cputune>
   ```
 
   找到 `<CPU>` 调整为如下内容:
   ```xml
-  <cpu mode='host-passthrough' check='none'>
-    <topology sockets='1' cores='2' threads='2'/>
-    <cache level='3' mode='emulate'/>
+  <cpu mode='host-passthrough' check='none' migratable='on'>
+    <topology sockets='1' dies='1' cores='3' threads='2'/>
+    <feature policy='disable' name='hypervisor'/>
   </cpu>
   ```
+  其中 `<feature policy='disable' name='hypervisor'/>` 为开模拟器，原神等的必须配置
+  
+  
 
 ## 改进 AMD CPUs 性能
 
@@ -370,162 +363,6 @@ Linux宿主+Windows虚拟机使用物理显卡
   
   小技巧: 把Linux锁屏快捷键同样设置为Win+L, 在Linux(客户端)上按Win+L可同时锁住2个系统
 
-
-# Evdev 共享鼠标键盘 Mouse, Keyboard  [未成功]
-
-  Input is often the first hurdle presented after getting a passthrough VM up and running. Without Spice or VNC, users often resort to hacks and workarounds to control their virtual machine. Passing through USB devices via evdev has become a popular if badly documented way of handling input. The advantage of evdev is that it has very low latency and overhead. The downside is that it becomes frustrating to switch between the host and guest.
-
-  While a physical KVM switch will always be a viable option, complete solutions with modern video connectors can be very expensive, and start to eat into a build budget when compounded with other hardware quality of life improvements. Evdev passhthrough is a good alternative for those  that can’t afford hardware solutions but still want low latency and accurate input.
-
-## What is Evdev?
-
-  Evdev is an input interface built into the Linux kernel. QEMU’s evdev passthrough support allows a user to redirect evdev events to a guest. These events can include mouse movements and key presses. By hitting both Ctrl keys at the same time, QEMU can toggle the input recipient. QEMU’s evdev passthrough also features almost no latency, making it perfect for gaming. The main downside to evdev passthrough is the lack of button rebinding – and in some cases, macro keys won’t even work at all.
-
-  This setup has no requirements besides a keyboard, mouse, and working passthrough setup. This guide assumes you have already configured these.
-
-## Configuring Evdev
-
-  To start, you will need to find the input device IDs for your mouse and keyboard. This can get a little finicky, as some keyboard manufacturers do this differently. The Linux kernel exposes two different locations for evdev devices: `/dev/input`, and `/dev/input/by-id`. `/dev/input/by-id` is generally preferred, as you can pass through input devices without worrying about the file path changing if you plug/unplug additional devices. List the contents of this directory:
-
-  ```shell
-  ls /dev/input/by-id
-  ```
-
-  It will contain your input devices. Take note of which ones you want to pass through. Be careful here, as I have noticed two common discrepancies. The first is an “if01” or “if02” or similar near the end of an input device name. The best method to find out which one is correct is to use “cat.” Run:
-
-  ```shell
-  cat /dev/input/by-id/[input device id]
-  ```
-
-  Press random keys on the keyboard you want to pass through. If garbled characters appear on-screen, you have selected the correct one. If not, try another until you find the correct one. Use Ctrl+C to cancel the “cat” process. Another issue to be wary of is the input device type. A lot of mice will have keyboard inputs, and some keyboards even have mouse inputs. Select the input device that corresponds to your device. For example, if you see two entries for your keyboard, with one ending with “event-kbd”  and the other ending with “event-mouse,” you will generally want to pick “event-kbd.” Some hardware manufacturers hate following standards, though, and you might find yourself needing to switch this up.
-
-  Now that you’ve noted the devices you want to use evdev with, it’s time to enable it in your libvirt XML. Open the XML with the following, replacing “nano” with your editor of choice, and “win10” with the name of your libvirt domain:
-
-  `nano virsh edit win10`
-
-  Make sure the first line looks like this:  
-
-  ```shell
-  <domain type='kvm' id='1' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-  ```
-
-  If it doesn’t, replace the first line with that. Next, add the following near the bottom, directly above `</domain>`:
-
-  ```shell
-  <qemu:commandline>
-    <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/MOUSE_NAME'/>
-    <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/KEYBOARD_NAME,grab_all=on,repeat=on'/>
-  </qemu:commandline>
-  ```
-
-  If you already have qemu:commandline set up for whatever reason, add the qemu:arg options above to that section. Don’t add another set of qemu:commandline arguments. Replace the `MOUSE_NAME` and `KEYBOARD_NAME` parts with the id of your input devices. Next, save the XML. In nano, you can do this with Ctrl+X, then Y, then Enter. Boot up your VM. It should now work, with the keyboard and mouse being directly passed to the VM! By hitting **both Ctrl keys at the same time**, you can switch between hosts. Wonderful, isn’t it?
-
-  I had to use the following block in my win10 xml to get things working:  
-
-  ```xml
-  <qemu:commandline>
-    <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/usb-MOSART_Semi._2.4G_Keyboard_Mouse-if01-event-mouse'/>
-    <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd,grab_all=on,repeat=on'/>
-  </qemu:commandline>
-  ```
-
-## 故障
-### Evdev Permission Errors
-
-There are a wide variety of causes for permission issues with evdev passthrough. To start, let’s set up cgroup_device_acl in libvirt’s configuration. Ensure the following is in `/etc/libvirt/qemu.conf`, of course replacing `KEYBOARD_NAME` and `MOUSE_NAME`:
-
-```shell
-cgroup_device_acl = [
-        "/dev/null", "/dev/full", "/dev/zero", 
-        "/dev/random", "/dev/urandom",
-        "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-        "/dev/rtc","/dev/hpet",
-        "/dev/input/by-id/KEYBOARD_NAME",
-        "/dev/input/by-id/MOUSE_NAME"
-]
-```
-
-Now restart libvirtd with  
-
-```shell
-systemctl restart libvirtd
-```
-
-for OpenRC distributions like Gentoo and Artix.
-If this still throws a permission error, the likely cause is that qemu is running as a user that does not have access to the input devices for security reasons. There are a few ways to get around this by changing the user that libvirt spawns the qemu process as (note that this will most likely break any PulseAudio passthrough you may have done, if you already updated this to your user):
-
-```shell
-user = "root"
-group = "root"
-```
-
-This method is a bit overkill, as it effectively removes all sandboxing that libvirt applies by running the user as a non-root user by default. If you don’t use pulseaudio, and you still want sandboxing, then follow the instructions here:
-First, create a new user/group to sandbox as, for example “evdev”:
-
-```shell
-useradd -s /usr/sbin/nologin -r -M -d /dev/null evdev
-groupadd evdev
-usermod -a -G input evdev
-```
-
-With that done, you’ve now created a user that has no home directory that can’t normally be logged into from a login shell, and added the new user to the input group that is necessary to read the files for evdev. Following this, update the qemu.conf to reflect these changes:
-
-```shell
-user = "evdev"
-group = "evdev"
-```
-
-Finally, if you do require PulseAudio, all you need to do is add your user to the input group (Assuming that you already have PulseAudio working properly.)
-
-```shell
-gpasswd -a <your user> input
-```
-
-If this still throws a permission error, set the following in the same file:
-
-```shell
-clear_emulator_capabilities = 0
-```
-
-If this still throws a permission error, execute the ollowing command:  
-
-```shell
-chown root:kvm /dev/kvm
-```
-
-If this still throws a permission error, execute the ollowing command:  
-
-Add the folowing to `/etc/apparmor.d/abstractions/libvirt-qemu`
-
-```shell
-/dev/input/* rw,
-```
-
-Then restart apparmor:  
-`sudo service apparmor restart`  
-
-Any permission issues should now be solved.
-
-My settings in `/etc/libvirt/qemu.conf` for my setup are the following:
-
-```shell
-user = "root"
-group = "root"
-clear_emulator_capabilities = 0
-
-cgroup_device_acl = [
-    "/dev/null", "/dev/full", "/dev/zero",
-    "/dev/random", "/dev/urandom",
-    "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-    "/dev/rtc","/dev/hpet",
-    "/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd",
-    "/dev/input/by-id/usb-MOSART_Semi._2.4G_Keyboard_Mouse-if01-event-mouse"
-]
-```
 
 # 设置自启动
 
