@@ -390,7 +390,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   
   Looking Glass 有想了解的移步 [Wiki](https://wiki.archlinux.org/title/QEMU/Guest_graphics_acceleration#Looking_Glass)
   
-  Evdev 鼠标 [evdev-mouse](https://github.com/k-spit/gpu-passthrough#evdev-passthrough-mouse-keyboard)
+  Evdev 鼠标,通过热键切换屏幕 [evdev-mouse](https://github.com/k-spit/gpu-passthrough#evdev-passthrough-mouse-keyboard)
 
 # 参考链接
   https://github.com/xiyizi/kvm-config 
