@@ -7,7 +7,7 @@
 # date		: 05.04.2014
 # license	: GPLv2
 # usage		: run ./tiny_gpt.sh
-# 先使用parted分区，boot分区必须使用fat32格式
+# 可先使用parted分区，boot分区必须使用fat32格式
 # boot 分区500M，要和主分区分开
 ##############################################################
 
@@ -97,7 +97,7 @@ function tiny_fdisk
 
 	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
 	if [ "$ans" = "y" ]; then
-		mkfs.ext4 /dev/$part
+		mkfs.fat -F32 /dev/$part
 	fi
 
 	mkdir /mnt/boot
