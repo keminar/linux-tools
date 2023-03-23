@@ -241,9 +241,19 @@ Linux宿主+Windows虚拟机使用物理显卡
     <feature policy='disable' name='hypervisor'/>
   </cpu>
   ```
-  其中 `<feature policy='disable' name='hypervisor'/>` 为开模拟器，原神等的必须配置
+  其中 `<feature policy='disable' name='hypervisor'/>` 为开手游模拟器，原神等的必须配置
   
+  host-model 根据物理CPU的特性，选择一个最靠近的标准CPU型号，如果没有指定CPU模式，默认也是使用这种模式
+
+  host-passthrough 直接将物理CPU 暴露给虚拟机使用，在虚拟机上完全可以看到的就是物理CPU的型号
   
+  找到 `<clock>` 标签， 优化空闲CPU使用率修改为：
+  ```xml
+  <clock offset='localtime'>
+    <timer name='hpet' present='yes'/>
+    <timer name='hypervclock' present='yes'/>
+  </clock>
+  ```
 
 ## 改进 AMD CPUs 性能
 
@@ -251,8 +261,8 @@ Linux宿主+Windows虚拟机使用物理显卡
 
   ```xml
   <cpu mode='host-passthrough' check='none'>
-    <topology sockets='1' cores='2' threads='2'/>
-    <cache level='3' mode='emulate'/>
+    <topology sockets='1' dies='1' cores='3' threads='2'/>
+    <feature policy='disable' name='hypervisor'/>
     <feature policy='require' name='topoext'/>
   </cpu>
   ```
@@ -428,3 +438,9 @@ Linux宿主+Windows虚拟机使用物理显卡
   https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
   
   https://www.cyberciti.biz/faq/rhel-centos-linux-kvm-virtualization-start-virtual-machine-guest/
+
+  https://forums.unraid.net/topic/126098-%E6%B1%82%E5%8A%A9%EF%BC%81win11-wm-%E6%89%93%E5%BC%80%E5%8E%9F%E7%A5%9E-%E6%98%BE%E7%A4%BA%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%8B%E6%97%A0%E6%B3%95%E8%BF%90%E8%A1%8C/
+  
+  https://www.wunote.cn/article/4801/
+  
+  https://cliuyang.cn/run-Windows-programs-on-Linux/
