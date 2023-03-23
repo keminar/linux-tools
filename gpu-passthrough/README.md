@@ -327,7 +327,9 @@ Linux宿主+Windows虚拟机使用物理显卡
 
   virt-manager 打开虚拟机- 添加硬件-PCI设备-找到我的显卡 VGA compatible controller [0300]: NVIDIA Corporation TU104 [GeForce RTX 2060] [10de:1e89] (rev a1) 
   
-  这里遇到一个奇怪问题,如果添加了显卡一起的声卡,USB等硬件,则虚拟机无法出声音,U盘在虚拟机识别.  如果只加 **10de:1e89**  一条,则模拟声卡可以播放虚拟机声音,U盘在主机识别.
+  这里添加了显卡一起的声卡,USB等硬件,U盘在虚拟机识别.  如果只加 **10de:1e89**  一条,U盘在主机识别.
+  
+  声音好像都是从 **virt-manager** 发出来的，需要打开  **virt-manager** 并打开虚拟机页面
 
 # 使用barrier 共享鼠标键盘
   
