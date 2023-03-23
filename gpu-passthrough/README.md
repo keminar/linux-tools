@@ -383,6 +383,12 @@ Linux宿主+Windows虚拟机使用物理显卡
   打开开机启动 `virsh autostart win10`
   
   关闭自启动 `virsh autostart win10 --disable`
+  
+# 单屏方案
+  
+  winapps 个有意思的软件，不过有几年没更新了，因为我是双屏，所以也没有怎么用。想了解的移步 [https://github.com/Fmstrat/winapps](https://github.com/Fmstrat/winapps)
+  
+  Looking_Glass 有想了解的移步 [Wiki](https://wiki.archlinux.org/title/QEMU/Guest_graphics_acceleration#Looking_Glass)
 
 # 参考链接
   https://github.com/xiyizi/kvm-config 
