@@ -245,9 +245,9 @@ Linux宿主+Windows虚拟机使用物理显卡
   
   host-model 根据物理CPU的特性，选择一个最靠近的标准CPU型号，如果没有指定CPU模式，默认也是使用这种模式
 
-  host-passthrough 直接将物理CPU 暴露给虚拟机使用，在虚拟机上完全可以看到的就是物理CPU的型号
+  [host-passthrough](http://wsfdl.com/openstack/2018/01/02/libvirt_cpu_mode.html) 直接将物理CPU 暴露给虚拟机使用，在虚拟机上完全可以看到的就是物理CPU的型号
   
-  找到 `<clock>` 标签， 优化空闲CPU使用率修改为：
+  找到 `<clock>` 标签优化空闲CPU使用率,修改为：
   ```xml
   <clock offset='localtime'>
     <timer name='hpet' present='yes'/>
