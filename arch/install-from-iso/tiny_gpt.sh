@@ -95,7 +95,7 @@ function tiny_fdisk
 		[[ $(lsblk -dno TYPE "/dev/$part") = 'part' ]] && break
 	done
 
-	read -p "Do you want to format ${part} partition use mkfs.ext4 [n|y]: " ans
+	read -p "Do you want to format ${part} partition use mkfs.fat32 [n|y]: " ans
 	if [ "$ans" = "y" ]; then
 		mkfs.fat -F32 /dev/$part
 	fi
