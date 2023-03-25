@@ -270,7 +270,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   注： 因为我不是AMD的cpu所以没有操作，上面只是一段引用
 
 # 内存大分页
-  Arch Wiki写的不是很容易理解，我找到两个文章 [hugepages_settings.sh](https://www.cnblogs.com/jyzhao/p/9961336.html) 可以了解一些基本概念以及有个脚本可计算当前计算机运行状态下 **vm.nr_hugepages** 设置多少值合适，后面我读了 [透明大页](https://opensource.actionsky.com/20230209-hugepages/) 认为对于我的使用情况THP可能更合适，所以内存方面没进行什么修改。
+  Arch Wiki写的不是很容易理解，我找到两个文章， 第一个 [hugepages_settings.sh](https://www.cnblogs.com/jyzhao/p/9961336.html) 可以了解一些基本概念以及有个脚本可计算当前计算机运行状态下 **vm.nr_hugepages** 设置多少值合适，我自己执行了下，建议设置 **128**，后面我读了 [透明大页](https://opensource.actionsky.com/20230209-hugepages/) 认为对于我的使用情况THP可能更合适，所以内存方面没进行什么修改。
   
   Wiki说Arch 内核已经编译并默认启用了 THP，默认为 **madvise** 模式, 检查THP情况
   ```
@@ -278,9 +278,9 @@ Linux宿主+Windows虚拟机使用物理显卡
   [always] madvise never
   ```
   我的系统选项是选中了 **always** 
-  - [always] 表示强制执行优化建议，即推荐系统将受影响的内存区域立即移动到磁盘上，以帮助系统更有效地使用内存。
-  - [never] 表示不进行优化，即推荐系统不将受影响的内存区域移动到磁盘上。
-  - [madvise] 这意味着内核根据应用程序的内存访问模式动态地启用和禁用透明大页。
+  - [always] 表示强制执行优化，以帮助系统更有效地使用内存。
+  - [never] 表示不进行优化
+  - [madvise] 表示内核根据应用程序的内存访问模式动态地启用和禁用透明大页。
   
   开启 Transparent Huge Pages 后，内核将自动管理大内存页，因此通常情况下不需要显式地开启 vm.nr_hugepages 参数。 
 
