@@ -159,7 +159,8 @@ function select_cmd
            break
        done
    done
-   $cmd
+   #$cmd
+   eval $cmd
 }
 
 # 不可用source调用提示
