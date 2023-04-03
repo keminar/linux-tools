@@ -8,7 +8,7 @@
     
 # 锁屏后鼠标不见了
     
-在Linux键盘上按ctrl+alt+f3切换命令行模式，登录帐号。**sudo virsh shutdown win10** 关闭 windows机器，如果关不掉可以尝试  **sudo virsh destroy win10**
+在Linux键盘上按ctrl+alt+f3切换命令行模式，登录帐号。**sudo virsh shutdown win10** 关闭 windows机器，如果关不掉可以尝试  **sudo virsh destroy win10**  （win10为我的虚拟机名）
     
 # 鼠标移动不到副屏
 
