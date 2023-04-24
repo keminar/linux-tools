@@ -4,7 +4,7 @@
 
 # WARNING: secondary screen unavailable: unable to open screen
 
-鼠标只在主系统激活，ssh连到客户端发现 barrierc 没启动，手动启动测试报上面错。解决方法是用客户端键盘激活屏幕并登录账号即可。
+鼠标只在主系统(windows)激活，ssh连到客户端发现 barrierc 没启动，手动启动测试报上面错。解决方法是用客户端键盘激活屏幕并登录账号即可。
     
 # 锁屏后鼠标不见了
     
@@ -12,4 +12,7 @@
     
 # 鼠标移动不到副屏
 
-可以尝试ssh检查linux下进程是否存在，如果存在可以观查日志是否正常。如果也正常可以查看windows日志是否正常，如果也正正常可以尝试分别重启windows和linux下的barrier，如果还不能解决，那尝试重启windows
+可以尝试ssh检查linux下进程是否存在，如果存在可以观查日志是否正常。如果也正常可以查看windows日志是否正常，然后尝试如果3种方法之一解决
+1. 如果副屏是锁的，在副屏自己的键盘解锁屏幕
+2. 可以尝试分别重启windows和linux下的barrier
+3. 尝试重启windows
