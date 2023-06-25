@@ -112,8 +112,13 @@ function agent_add
            ssh-agent -s >$agentFile 2>/dev/null
        fi
        source $agentFile >/dev/null
+       if [ $SSH_AGENT_PID = "" ]; then
+           echo "start ssh-agent"
+           ssh-agent -s >$agentFile 2>/dev/null
+           source $agentFile >/dev/null
+       fi
        # 如果不存在表示过期,要重新生成
-       if ! ps -p $SSH_AGENT_PID > /dev/null; then
+       if ! ps -p $SSH_AGENT_PID | grep ssh-agent> /dev/null; then
        #if [ ! -e $SSH_AUTH_SOCK ];then
            echo "start ssh-agent"
            ssh-agent -s >$agentFile 2>/dev/null
