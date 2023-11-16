@@ -1,4 +1,4 @@
-==前言==
+# 前言
 
 本文只是使用时的一些记录，无法保证所有描述都是准确的，因为官方Wiki要讲的东西比较多，所以新手没有头绪到底要怎么配置。
 
@@ -6,21 +6,22 @@
 
 本文是用 NetworkManager 帮助简单配置下本机静态ipv6，我原来有用dhcpcd配置ipv4，要禁用掉才行，其它同理。
 
-在Arch linux中 IPv6 默认是开启的，之前本地没有IPv6地址导致有个别网址访问有问题，所以手动进行了关闭。下文先反向开启，没有关闭过的可以忽略。
 
-== 开启ipv6 == 
+# 开启ipv6
 
-修改或删除 {ic|/etc/sysctl.d/40-ipv6.conf}} 来让系统给网卡分配IPv6地址：
+在Arch linux中 IPv6 默认是开启的，之前本地没有IPv6地址导致有个别网址访问有问题，所以手动进行了关闭。下面先反向开启，没有关闭过的可以忽略。
+
+修改或删除 `/etc/sysctl.d/40-ipv6.conf` 来让系统给网卡分配IPv6地址：
 
 ```
  # Enable IPv6
  net.ipv6.conf.all.disable_ipv6 = 0
- net.ipv6.conf.''nic0''.disable_ipv6 = 0
+ net.ipv6.conf.nic0.disable_ipv6 = 0
 ```
 
-重启 {{ic|systemd-sysctl.service}} 来应用上述设置。
+上面的 `nic0` 是你的网卡名, `sudo systemctl restart systemd-sysctl` 来应用上述设置。
 
-== 查看ipv4配置 ==
+# 查看ipv4配置
 
 ```
 # 查看ipv4地址和子网掩码
@@ -39,7 +40,7 @@ ip route
 # 查看DNS
 cat /etc/resolv.conf
 
-== 禁用冲突的服务 ==
+# 禁用冲突的服务
 
 ```
 # 如有使用netctl禁
@@ -57,7 +58,7 @@ sudo systemctl disable systemd-resolved
 sudo systemctl stop systemd-resolved
 ```
 
-== 安装NetworkManager ==
+# 安装NetworkManager
 
 ```
 sudo pacman -S networkmanager extra/nm-connection-editor
@@ -67,3 +68,4 @@ sudo systemctl start NetworkManager
 sudo systemctl enable NetworkManager
 ```
 
+安装好以后就有一个高级网络配置的图形配置工具了，通过图形化配置ipv4和ipv6
