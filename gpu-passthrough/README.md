@@ -378,7 +378,7 @@ Linux宿主+Windows虚拟机使用物理显卡
   ```
   然后执行
   ```
-  systemctl --user enable barriers.service
+  systemctl --user enable barrierc.service
   ```
   4. Windows 自启动
   自启动是启动的系统服务。可以Win+R打开services.msc找到Barrier看是否是自动启动，检查当前状态。如果正常启动 **任务管理器-详细信息** 里能找到两个进程 barrierd.exe 和 barriers.exe ,如果显示启动但是没有barriers.exe就可能是和barrier.exe图形设置冲突了。需要以管理员身份打开barrier软件，然后菜单中点击设置， 不要勾选 “Minimize to System Tray”，“Hide on startup”， “Start Barrier on startup” 点击确定，并重启服务
