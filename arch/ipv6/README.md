@@ -4,7 +4,7 @@
 
 网络设置有几种套件（ netctl、 dhcpcd、 NetworkManager、 systemd-networkd 等 ），相互之间应该是冲突的，要选择其中一个。
 
-本文是用 NetworkManager 帮助简单配置下本机静态ipv6，我原来有用dhcpcd配置ipv4，要禁用掉才行，其它同理。
+本文是用 NetworkManager 帮助简单图形化配置本机静态ipv6，我原来有用dhcpcd配置ipv4，要禁用掉才行，其它同理。
 
 
 # 开启ipv6
@@ -69,3 +69,5 @@ sudo systemctl enable NetworkManager
 ```
 
 安装好以后就有一个高级网络配置的图形配置工具了，通过图形化配置ipv4和ipv6
+
+静态ipv6 需要录入信息有“地址，前缀，网关，DNS服务器”
