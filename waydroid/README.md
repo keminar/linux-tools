@@ -22,13 +22,16 @@ Waydroid 手机模拟器
   sudo systemctl start waydroid-container
   ```
 
+  注：waydroid-image-gapps也可以不用aur安装，通过点waydroid图标启动, 首次打开可下载镜像，这种方式好像不需要命令行再init了
+
 # 3. 使用weston以在X11下运行模拟器
   ```shell
   sudo pacman -S weston
   weston
   ```
   weston 命令会打开一个新的窗口（使用Wayland的协议），在其左上角打开终端即可启动程序
-  
+ 
+  Mate桌面需要安装，Gnome可以不安装，直接点图标可以启动waydroid 
  ### 在weston终端内运行测试
   ```shell
   waydroid session start
@@ -40,7 +43,9 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
   2. 如果完全看到错误 /dev/anbox-binder: Permission denied 重启电脑再试
 
 # 4. 启动模拟器
-  在weston终端执行 `waydroid show-full-ui` 以后启动可以跳过`waydroid session start`
+  在weston终端执行 `waydroid show-full-ui` , (启动可以跳过`waydroid session start`)
+
+  关闭虚拟机使用 `waydroid session stop`
 
   如果遇到 can't open /dev/binder 尝试重新初始化
   ```shell
@@ -76,7 +81,9 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
   ```
 
 # 7. 模拟器假如没有网络，如果自己有用放火墙，如ufw
-  如果没用防火墙不需要安装防火墙，跳过这一步
+  默认浏览器首页是Google网络问题会打不开，点右边三个点改为baidu 重新打开浏览器就好了
+
+  如果还是没有网络检查防火墙，如果没用防火墙不需要安装防火墙，跳过这一步
   ```shell
   sudo pacman -S ufw
   sudo ufw allow 67
@@ -85,10 +92,7 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
   ```
   在waydroid session start 前 sudo ufw enable
   
-  如果本地有其他服务，启用后发现用不了了，对应端口也要放行，如ssh
-  ```
-  sudo ufw allow 22
-  ```
+  如果本地有其他服务，启用后发现用不了了，对应端口也要放行，如ssh 端口`sudo ufw allow 22`
 
 # 8. 模拟器设置代理
 
