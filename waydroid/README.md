@@ -116,3 +116,11 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
   - https://zhuanlan.zhihu.com/p/643889264
   - https://blog.sww.moe/post/waydroid-arknights/
   - https://wiki.archlinux.org/title/Waydroid
+
+# 12. 其他
+   android studio 做过测试， windows+Intel下x86镜像无法安装arm的手机app同时无法启动arm镜像
+   
+   但在Linux下(未安装waydroid前)可以使用x86镜像安装arm架构的app，使用速度上比waydroid差一丁点
+   
+
+  
