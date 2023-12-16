@@ -110,7 +110,7 @@ function tiny_chroot
 {
 	echo "Set arch-chroot"
 	printf '%s\n' "mkinitcpio -p linux; \
-	pacman -S --noconfirm grub; \
+	pacman -S --noconfirm grub dhcpcd; \
 	grub-install --recheck /dev/$DISK; \
 	grub-mkconfig -o /boot/grub/grub.cfg; \
 	echo root:123456 | chpasswd; \
