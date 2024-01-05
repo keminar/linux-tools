@@ -40,7 +40,7 @@ Waydroid 手机模拟器
 
 ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola                                                                                                                                                                                                                                                                      unch was disabled at compile time, set your DBUS_SESSION_BUS_ADDRESS instead
 
-  2. 如果完全看到错误 /dev/anbox-binder: Permission denied 重启电脑再试
+  2. 如果看到错误 /dev/anbox-binder: Permission denied 重启电脑再试
 
 # 4. 启动模拟器
   在weston终端执行 `waydroid show-full-ui` , (启动可以跳过`waydroid session start`)
@@ -80,19 +80,17 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
   for a in ~/.local/share/applications/waydroid.*.desktop;do grep -q NoDisplay $a                                                                                                                                                                                                                                                                       || sed '/^Icon=/a NoDisplay=true' -i $a; done
   ```
 
-# 7. 模拟器假如没有网络，如果自己有用放火墙，如ufw
+# 7. 模拟器假如没有网络
   默认浏览器首页是Google网络问题会打不开，点右边三个点改为baidu 重新打开浏览器就好了
 
-  如果还是没有网络检查防火墙，如果没用防火墙不需要安装防火墙，跳过这一步
+  如果还是没有网络检查防火墙，如果有用ufw防火墙，是这样操作
   ```shell
   sudo pacman -S ufw
   sudo ufw allow 67
   sudo ufw allow 53
   sudo ufw default allow FORWARD
   ```
-  在waydroid session start 前 sudo ufw enable
-  
-  如果本地有其他服务，启用后发现用不了了，对应端口也要放行，如ssh 端口`sudo ufw allow 22`
+  没用防火墙不需要安装防火墙，跳过这一步
 
 # 8. 模拟器设置代理
 
@@ -120,7 +118,7 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
 # 12. 其他
    android studio 做过测试， windows+Intel下x86镜像无法安装arm的手机app同时无法启动arm镜像
    
-   但在Linux下(未安装waydroid前)可以使用x86镜像安装arm架构的app，使用速度上比waydroid差一丁点
+   但在Linux下(未安装waydroid前)可以使用x86镜像安装arm架构的app，使用速度上比waydroid差一些
    
 
   
