@@ -123,6 +123,10 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
 # 13. 报错ModuleNotFoundError: No module named 'gbinder'
 
    参考 https://github.com/waydroid/waydroid/issues/344  因为系统升级了，导致aur安装的 python-gbinder 也需要重新安装
+
+# 14. 报错 /usr/lib/waydroid/tools/helpers/net.py:34: SyntaxWarning: invalid escape sequence '\d'
+   参考 https://stackoverflow.com/questions/77531208/python-3-12-syntaxwarning-invalid-escape-sequence-on-triple-quoted-string-d
+  打开 net.py 34 行 return re.search("(\d{1,3}\.){3}\d{1,3}\s", f.read()).group().strip() 修改为 return re.search(r"(\d{1,3}\.){3}\d{1,3}\s", f.read()).group().strip()
    
 
   
