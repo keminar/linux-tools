@@ -9,7 +9,7 @@ Waydroid 手机模拟器
     sudo pacman -S linux-zen
     sudo grub-mkconfig -o /boot/grub/grub.cfg
     ```
-  ### 法2: 从aur 安装 binder_linux-dkms
+  ### 法2: 从aur 安装 binder_linux-dkms （不推荐）
   安装以后使用 `modprobe binder_linux` 挂载模块
 
 # 2. 安装 waydroid 和 waydroid-image-gapps
@@ -119,6 +119,10 @@ ERROR: org.freedesktop.DBus.Error.NotSupported: Using X11 for dbus-daemon autola
    android studio 做过测试， windows+Intel下x86镜像无法安装arm的手机app同时无法启动arm镜像
    
    但在Linux下(未安装waydroid前)可以使用x86镜像安装arm架构的app，使用速度上比waydroid差一些
+
+# 13. 报错ModuleNotFoundError: No module named 'gbinder'
+
+   参考 https://github.com/waydroid/waydroid/issues/344  因为系统升级了，导致aur安装的 python-gbinder 也需要重新安装
    
 
   
