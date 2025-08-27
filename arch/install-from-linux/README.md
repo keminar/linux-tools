@@ -32,7 +32,7 @@ mv bin etc home lib lib64 mnt opt root sbin srv usr var data/bak/
 # 新系统
 ```
 pacstrap /mnt base linux linux-firmware
-genfstab -U -p /mnt >> /mnt/etc/fastab
+genfstab -U -p /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 mkinitcpio -p linux
 pacman -S  --noconfirm  grub efibootmgr
